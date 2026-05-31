@@ -45,7 +45,7 @@ exports.register = async (req, res) => {
     });
   } catch (error) {
     console.error('Registration Database Error:', error);
-    res.status(500).json({ success: false, message: 'Server Error' });
+    res.status(500).json({ success: false, message: `Database/Server Error: ${error.message}` });
   }
 };
 
