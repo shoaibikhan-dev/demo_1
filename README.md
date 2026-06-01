@@ -1,113 +1,60 @@
 # 🏙️ Mardan Smart City – Citizen Complaint Portal
 
-A full-stack web application that allows citizens of Mardan to submit, track, and manage civic complaints. Built with **React (Vite)**, **Node.js (Express)**, and **PostgreSQL (Sequelize)**.
+A fully modernized, **Cloud-Native** web application that allows citizens of Mardan to submit, track, and manage civic complaints. 
+
+This repository contains the complete implementation for the DESC Digital Innovation Center RFP (Tender Reference Number: DESC-MRD-2026-CNC-088).
 
 ---
 
-## 📁 Project Structure
+## 🌟 Cloud-Native Architecture
 
-```
-Phase1/
-├── frontend/                   # React + Vite application
-│   ├── src/
-│   │   ├── App.jsx             # Main app component (routing, layout)
-│   │   └── App.css             # Global dark-theme styles
-│   ├── .env                    # Frontend env vars (VITE_API_BASE_URL)
-│   ├── vite.config.js          # Vite configuration
-│   └── package.json
-│
-├── backend/                    # Node.js + Express REST API
-│   ├── server.js               # App entry point
-│   ├── config/
-│   │   └── db.js               # PostgreSQL / Sequelize connection
-│   ├── models/
-│   │   ├── User.js             # User model (citizen / admin / staff)
-│   │   └── Complaint.js        # Complaint model with associations
-│   ├── controllers/
-│   │   ├── authController.js       # Register, login, JWT
-│   │   ├── complaintController.js  # CRUD + tracking + pagination
-│   │   └── userController.js       # Admin user management
-│   ├── routes/
-│   │   ├── authRoutes.js       # /api/auth/*
-│   │   ├── complaintRoutes.js  # /api/complaints/*
-│   │   ├── userRoutes.js       # /api/users/*
-│   │   └── categoryRoutes.js   # /api/categories
-│   ├── middleware/
-│   │   ├── authMiddleware.js       # JWT protect + role guards
-│   │   └── validationMiddleware.js # express-validator handler
-│   ├── .env                    # Backend env vars (DB, JWT, PORT)
-│   └── package.json
-│
-├── .gitignore
-└── README.md
-```
+This project has been completely refactored from a monolithic setup to a scalable, cloud-native orchestration pipeline featuring:
+
+- **React + Vite Frontend:** Modern, tabbed SPA with professional Lucide icons and dark-mode styling.
+- **Node.js + Express Backend:** RESTful API with stateless JWT authentication.
+- **PostgreSQL + Redis:** Stateful data persistence and fast in-memory caching.
+- **Docker Containerization:** Full `docker-compose` orchestration for local multi-container development.
+- **Kubernetes (K3s):** Production-ready YAML manifests (`Deployment`, `Service`, `StatefulSet`, `PVC`, `ConfigMap`, `Secret`) for seamless deployment.
+- **Infrastructure as Code (Terraform):** Automated cloud provisioning for AWS/GCP (VPC, EKS, RDS).
+- **CI/CD (GitHub Actions):** Automated builds, linting, testing, and Vercel/Render deployments.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Getting Started Locally (Docker)
+
+The absolute fastest way to run the entire architecture (Frontend, Backend, Postgres, Redis) is via Docker Compose.
 
 ### Prerequisites
-- Node.js ≥ 18
-- PostgreSQL ≥ 14
+- [Docker Desktop](https://www.docker.com/products/docker-desktop) installed and running.
 
-### 1. Backend Setup
-
+### 1. Spin Up the Environment
 ```bash
-cd backend
-npm install
+docker-compose up -d --build
 ```
 
-Edit `backend/.env` and set your PostgreSQL credentials:
+This single command builds and starts:
+- `mardan-postgres` (Port 5432)
+- `mardan-redis` (Port 6379)
+- `mardan-backend` (Port 5000)
+- `mardan-frontend` (Port 3000)
 
-```env
-DB_NAME=mardan_smart_city
-DB_USER=postgres
-DB_PASSWORD=your_password
-```
-
-Create the database in PostgreSQL:
-
-```sql
-CREATE DATABASE mardan_smart_city;
-```
-
-Start the backend dev server:
-
-```bash
-npm run dev       # uses nodemon (auto-restarts on file changes)
-# OR
-npm start         # production
-```
-
-Backend runs on **http://localhost:5000**
-
-### 2. Frontend Setup
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Frontend runs on **http://localhost:5173**
+### 2. Access the Application
+- **Frontend Portal:** `http://localhost:3000`
+- **Backend API:** `http://localhost:5000`
 
 ---
 
-## 🔌 API Endpoints
+## 🏗️ Project Structure
 
-| Method | Endpoint | Access | Description |
-|--------|----------|--------|-------------|
-| POST | `/api/auth/register` | Public | Register a citizen |
-| POST | `/api/auth/login` | Public | Login & receive JWT |
-| GET | `/api/auth/me` | Private | Get current user |
-| GET | `/api/complaints/track/:id` | Public | Track by tracking ID |
-| POST | `/api/complaints` | Citizen | Submit new complaint |
-| GET | `/api/complaints/my` | Citizen | My complaints list |
-| GET | `/api/complaints` | Admin | All complaints (paginated) |
-| PATCH | `/api/complaints/:id` | Admin | Update status/priority |
-| DELETE | `/api/complaints/:id` | Admin | Delete complaint |
-| GET | `/api/users` | Admin | All users |
-| GET | `/api/categories` | Public | List categories |
+```text
+|-- .github/                # CI/CD Workflows (build, test, deploy)
+|-- backend/                # Node.js API + Dockerfile
+|-- database/               # SQL Schemas and Seeds
+|-- frontend/               # React Vite UI + Dockerfile
+|-- k3s/                    # Kubernetes Manifests
+|-- terraform/              # Infrastructure as Code (AWS/GCP)
+|-- docker-compose.yml      # Local Orchestration
+```
 
 ---
 
@@ -115,55 +62,38 @@ Frontend runs on **http://localhost:5173**
 
 | Layer | Technology |
 |-------|------------|
-| Frontend | React 19, Vite 6, Vanilla CSS |
-| Backend | Node.js, Express 4 |
-| Database | PostgreSQL + Sequelize ORM |
-| Auth | JWT (jsonwebtoken) + bcryptjs |
-| Validation | express-validator |
-| Security | helmet, cors |
-| Dev Tools | nodemon, Vite HMR |
+| **Frontend** | React 19, Vite 6, Tailwind CSS, Lucide Icons |
+| **Backend** | Node.js, Express 4, Sequelize ORM |
+| **Database** | PostgreSQL 15, Redis (Caching) |
+| **Containers**| Docker, Docker Compose |
+| **Orchestration**| Kubernetes (K3s) |
+| **IaC** | Terraform |
+| **CI/CD** | GitHub Actions |
+| **Auth** | JWT (jsonwebtoken) + bcryptjs |
 
 ---
 
 ## 🏗️ Complaint Flow
 
-1. Citizen **registers/logs in** → receives JWT
-2. Submits a complaint → gets a unique **MSC-XXXXXX tracking ID**
-3. Admin updates status: `pending → in_progress → resolved`
-4. Citizen (or anyone) tracks complaint status publicly using tracking ID
+1. Citizen **registers/logs in** → receives JWT.
+2. Submits a complaint → gets a unique **MSC-XXXXXX** tracking ID.
+3. System utilizes **Redis** for fast token validation and caching.
+4. Admin updates status: `pending → in_progress → resolved`.
+5. Citizen (or anyone) tracks complaint status publicly using tracking ID.
 
 ---
 
-## 📝 Environment Variables
+## 📝 RFP Submission Progress
 
-### Backend (`backend/.env`)
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `PORT` | Server port | `5000` |
-| `DB_NAME` | PostgreSQL database name | `mardan_smart_city` |
-| `DB_USER` | PostgreSQL username | `postgres` |
-| `DB_PASSWORD` | PostgreSQL password | — |
-| `DB_HOST` | Database host | `localhost` |
-| `JWT_SECRET` | Secret key for JWT signing | — |
-| `CLIENT_URL` | Frontend URL for CORS | `http://localhost:5173` |
-
-### Frontend (`frontend/.env`)
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `VITE_API_BASE_URL` | Backend API URL | `http://localhost:5000/api` |
+- [x] Docker Containerization
+- [x] Local Orchestration (Docker Compose)
+- [x] Kubernetes Manifests (K3s)
+- [x] CI/CD Pipeline (GitHub Actions)
+- [x] Infrastructure as Code (Terraform)
+- [x] Stateful Data Separation (Postgres/Redis)
+- [ ] **Prometheus & Grafana (Monitoring)** 
+- [ ] **Technical & Financial Proposals (Envelope A & B)**
 
 ---
 
-## 🌐 Complaint Categories
-- 🛣️ Roads & Infrastructure
-- 💧 Water Supply
-- ⚡ Electricity
-- 🗑️ Sanitation & Waste
-- 🌳 Parks & Recreation
-- 🚔 Public Safety
-- 🔊 Noise Pollution
-- 📌 Other
-
----
-
-*© 2024 Mardan Smart City. All rights reserved.*
+*© 2026 DESC Digital Innovation Center, Mardan. All rights reserved.*
