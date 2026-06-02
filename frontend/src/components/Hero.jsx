@@ -8,9 +8,13 @@ export default function Hero() {
   const heroRef = useRef(null)
 
   const backgroundImages = [
-    '/bg-1.png',
-    '/bg-2.png',
-    '/bg-3.png'
+    '/pic-1.png',
+    '/pic-2.png',
+    '/pic-3.png',
+    '/pic-4.png',
+    '/pic-5.png',
+    '/pic-6.png',
+    '/pic-7.png'
   ]
 
   useEffect(() => {

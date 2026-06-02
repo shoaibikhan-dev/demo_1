@@ -53,6 +53,15 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
+// ── Prometheus Monitoring ──────────────────────────────────────────────────
+const promClient = require('prom-client');
+promClient.collectDefaultMetrics();
+
+app.get('/api/metrics', async (_req, res) => {
+  res.set('Content-Type', promClient.register.contentType);
+  res.send(await promClient.register.metrics());
+});
+
 // ── 404 Handler ──────────────────────────────────────────────────────────────
 app.use((_req, res) => {
   res.status(404).json({ message: 'Route not found' });

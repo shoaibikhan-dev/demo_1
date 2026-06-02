@@ -78,6 +78,30 @@ services:
     networks:
       - mardan-network
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: mardan-prometheus
+    restart: always
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - mardan-network
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: mardan-grafana
+    restart: always
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
+    networks:
+      - mardan-network
+
 volumes:
   pgdata:
     driver: local
