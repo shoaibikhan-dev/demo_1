@@ -36,162 +36,178 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-surface-900 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-600/15 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute inset-0 dot-grid opacity-20 pointer-events-none" />
+    <div className="min-h-screen bg-[#241e30] flex">
+      {/* ── Left Panel (Image & Branding) ────────────────────── */}
+      <div 
+        className="hidden lg:flex w-1/2 relative flex-col justify-between p-12 bg-cover bg-center" 
+        style={{ backgroundImage: "url('/pic-2.png')" }}
+      >
+        <div className="absolute inset-0 bg-[#241e30]/50 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#241e30]/90 via-transparent to-[#241e30]/30" />
+        
+        {/* Top bar */}
+        <div className="relative z-10 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shadow-lg transition-transform group-hover:scale-105">
+              <span className="text-xl">🏙️</span>
+            </div>
+            <span className="text-white font-display font-bold text-2xl tracking-tight">Mardan</span>
+          </Link>
+          <Link to="/" className="flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-all text-white text-sm font-medium border border-white/10 hover:border-white/20">
+            Back to website <span className="text-base leading-none">→</span>
+          </Link>
+        </div>
 
-      <div className="relative z-10 w-full max-w-md">
-        {/* ── Logo ─────────────────────────────────────── */}
-        <Link to="/" className="flex items-center justify-center gap-3 mb-8 group">
-          <div className="w-12 h-12 rounded-xl bg-brand-gradient flex items-center justify-center shadow-brand group-hover:scale-110 transition-transform">
-            <span className="text-2xl">🏙️</span>
+        {/* Bottom text */}
+        <div className="relative z-10 mb-8">
+          <h2 className="text-white font-display text-5xl font-medium leading-[1.15] mb-8 tracking-tight max-w-lg">
+            Welcome Back,<br />Smart Citizen
+          </h2>
+          <div className="flex gap-2">
+            <div className="w-12 h-1 rounded-full bg-white shadow-[0_0_10px_rgba(255,255,255,0.5)]" />
+            <div className="w-8 h-1 rounded-full bg-white/30" />
+            <div className="w-8 h-1 rounded-full bg-white/30" />
           </div>
-          <div>
-            <p className="text-white font-display font-bold text-xl leading-tight">Mardan Smart City</p>
-            <p className="gradient-text text-xs font-semibold tracking-widest uppercase">Citizen Portal</p>
-          </div>
+        </div>
+      </div>
+
+      {/* ── Right Panel (Form) ─────────────────────────────────── */}
+      <div className="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-16 lg:px-24 py-12 relative overflow-y-auto">
+        {/* Mobile back button */}
+        <Link to="/" className="lg:hidden absolute top-8 right-8 text-white/50 hover:text-white transition-colors text-sm flex items-center gap-2">
+          <span>✕</span> Close
         </Link>
 
-        {/* ── Card ─────────────────────────────────────── */}
-        <div className="glass-card neon-border p-8">
-          <div className="mb-8">
-            <h1 className="text-white font-display font-bold text-2xl mb-1">Welcome back</h1>
-            <p className="text-white/50 text-sm">Sign in to your citizen account</p>
-          </div>
+        <div className="w-full max-w-md mx-auto">
+          <h1 className="text-white font-display font-medium text-4xl mb-2 tracking-tight">Log in</h1>
+          <p className="text-white/50 text-base mb-10">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-brand-400 hover:text-brand-300 hover:underline transition-colors underline-offset-4">
+              Register here
+            </Link>
+          </p>
 
           {/* Error Banner */}
           {error && (
             <div className="flex items-start gap-3 p-4 rounded-xl bg-red-500/10 border border-red-500/30 mb-6 animate-fade-in">
               <span className="text-red-400 text-lg flex-shrink-0">⚠️</span>
-              <p className="text-red-300 text-sm">{error}</p>
+              <p className="text-red-300 text-sm leading-relaxed">{error}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-            {/* Email */}
-            <div className="space-y-1.5">
-              <label htmlFor="login-email" className="block text-sm font-medium text-white/60">
-                Email Address
-              </label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 text-base pointer-events-none">
-                  ✉️
-                </span>
-                <input
-                  id="login-email"
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  placeholder="your@email.com"
-                  value={form.email}
-                  onChange={handleChange}
-                  disabled={loading}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-3.5 text-white placeholder-white/25 text-sm focus:outline-none focus:border-brand-500/60 focus:bg-brand-500/5 transition disabled:opacity-50"
-                />
+          {/* Demo Credentials */}
+          <div className="mb-6 rounded-xl border border-white/10 bg-white/[0.02] p-4">
+            <p className="text-white/70 text-xs font-semibold mb-3 tracking-wider uppercase">Demo Credentials</p>
+            <div className="flex flex-col gap-2 text-sm text-white/50 font-mono">
+              <div className="flex justify-between items-center">
+                <span>Email:</span>
+                <button
+                  type="button"
+                  onClick={() => setForm({ email: 'demo@mardancity.pk', password: 'demo1234' })}
+                  className="text-brand-400 hover:text-brand-300 transition-colors"
+                >
+                  demo@mardancity.pk
+                </button>
               </div>
+              <div className="flex justify-between items-center">
+                <span>Password:</span>
+                <span className="text-white/70">demo1234</span>
+              </div>
+            </div>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-5" noValidate>
+            
+            {/* Email */}
+            <div>
+              <input
+                name="email"
+                type="email"
+                required
+                placeholder="Email address"
+                value={form.email}
+                onChange={handleChange}
+                disabled={loading}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-white/30 text-sm focus:outline-none focus:border-brand-500/60 focus:bg-brand-500/5 transition disabled:opacity-50"
+              />
             </div>
 
             {/* Password */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label htmlFor="login-password" className="block text-sm font-medium text-white/60">
-                  Password
-                </label>
-                <a href="#" className="text-xs text-brand-400 hover:text-brand-300 transition">
-                  Forgot password?
-                </a>
-              </div>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 text-base pointer-events-none">
-                  🔒
-                </span>
-                <input
-                  id="login-password"
-                  name="password"
-                  type={showPw ? 'text' : 'password'}
-                  required
-                  autoComplete="current-password"
-                  placeholder="••••••••"
-                  value={form.password}
-                  onChange={handleChange}
-                  disabled={loading}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-12 py-3.5 text-white placeholder-white/25 text-sm focus:outline-none focus:border-brand-500/60 focus:bg-brand-500/5 transition disabled:opacity-50"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPw(v => !v)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition text-sm"
-                  tabIndex={-1}
-                >
-                  {showPw ? '🙈' : '👁️'}
-                </button>
-              </div>
+            <div className="relative">
+              <input
+                name="password"
+                type={showPw ? 'text' : 'password'}
+                required
+                placeholder="Enter your password"
+                value={form.password}
+                onChange={handleChange}
+                disabled={loading}
+                className="w-full bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-white/30 text-sm focus:outline-none focus:border-brand-500/60 focus:bg-brand-500/5 transition disabled:opacity-50 pr-12"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPw(!showPw)}
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/30 hover:text-white/60 transition"
+                tabIndex={-1}
+              >
+                {showPw ? '🙈' : '👁️'}
+              </button>
             </div>
 
-            {/* Submit */}
+            {/* Remember Me / Forgot Password */}
+            <div className="flex items-center justify-between mt-6">
+              <label className="flex items-center gap-3 cursor-pointer group">
+                <div className="relative flex-shrink-0">
+                  <input type="checkbox" className="sr-only" defaultChecked />
+                  <div className="w-5 h-5 rounded flex items-center justify-center transition-all border bg-brand-500 border-brand-500">
+                    <span className="text-white text-xs">✓</span>
+                  </div>
+                </div>
+                <span className="text-white/70 text-sm">Remember me</span>
+              </label>
+              <a href="#" className="text-sm text-brand-400 hover:text-brand-300 hover:underline underline-offset-2 transition-colors">
+                Forgot password?
+              </a>
+            </div>
+
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              id="login-submit-btn"
-              className="btn-primary w-full justify-center py-3.5 text-base mt-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full rounded-xl py-4 text-sm font-semibold text-white transition-all disabled:opacity-60 disabled:cursor-not-allowed mt-4 hover:bg-brand-400 bg-brand-500"
+              style={{
+                boxShadow: loading ? 'none' : '0 4px 14px 0 rgba(139, 92, 246, 0.39)',
+              }}
             >
               {loading ? (
-                <>
+                <div className="flex items-center justify-center gap-2">
                   <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in…
-                </>
+                  Signing in...
+                </div>
               ) : (
-                <>Sign In →</>
+                'Log in'
               )}
             </button>
           </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-3 my-6">
-            <div className="flex-1 h-px bg-white/8" />
-            <span className="text-white/30 text-xs">OR</span>
-            <div className="flex-1 h-px bg-white/8" />
+          <div className="flex items-center gap-4 my-8">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-white/30 text-xs font-medium">Or log in with</span>
+            <div className="flex-1 h-px bg-white/10" />
           </div>
 
-          {/* Demo credentials */}
-          <div className="p-4 rounded-xl bg-brand-500/8 border border-brand-500/20 mb-6">
-            <p className="text-brand-300 text-xs font-semibold mb-2 flex items-center gap-1.5">
-              <span>💡</span> Demo Credentials
-            </p>
-            <div className="space-y-1 text-xs text-white/50 font-mono">
-              <div className="flex justify-between">
-                <span>Email:</span>
-                <button
-                  onClick={() => setForm({ email: 'demo@mardancity.pk', password: 'demo1234' })}
-                  className="text-brand-400 hover:text-brand-300 transition"
-                >
-                  demo@mardancity.pk
-                </button>
-              </div>
-              <div className="flex justify-between">
-                <span>Password:</span>
-                <span className="text-brand-400">demo1234</span>
-              </div>
-            </div>
+          {/* Social Logins */}
+          <div className="grid grid-cols-2 gap-4">
+            <button type="button" className="flex items-center justify-center gap-2 py-3 rounded-xl border border-white/10 bg-transparent hover:bg-white/5 transition-colors text-sm font-medium text-white">
+              <span className="text-lg leading-none">🇬</span> Google
+            </button>
+            <button type="button" className="flex items-center justify-center gap-2 py-3 rounded-xl border border-white/10 bg-transparent hover:bg-white/5 transition-colors text-sm font-medium text-white">
+              <span className="text-lg leading-none">🍎</span> Apple
+            </button>
           </div>
 
-          <p className="text-center text-white/40 text-sm">
-            Don&apos;t have an account?{' '}
-            <Link to="/register" className="text-brand-400 hover:text-brand-300 font-medium transition">
-              Register here
-            </Link>
-          </p>
         </div>
-
-        {/* Back to home */}
-        <p className="text-center mt-6">
-          <Link to="/" className="text-white/30 hover:text-white/60 text-sm transition flex items-center justify-center gap-1">
-            ← Back to Homepage
-          </Link>
-        </p>
       </div>
     </div>
   )
