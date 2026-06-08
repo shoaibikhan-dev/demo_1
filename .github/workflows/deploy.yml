@@ -31,3 +31,16 @@ jobs:
             -t ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }} ./frontend
           docker push ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:latest
           docker push ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}
+
+      - name: Update Image Tags in Kubernetes YAML
+        run: |
+          sed -i 's|${{ secrets.DOCKERUSERNAME }}/mardan-backend:.*|${{ secrets.DOCKERUSERNAME }}/mardan-backend:${{ github.sha }}|g' \
+            k3s/deployments/backend-deployment.yaml
+          sed -i 's|${{ secrets.DOCKERUSERNAME }}/mardan-frontend:.*|${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}|g' \
+            k3s/deployments/frontend-deployment.yaml
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add k3s/deployments/backend-deployment.yaml
+          git add k3s/deployments/frontend-deployment.yaml
+          git commit -m "ci: update images to ${{ github.sha }}"
+          git push

@@ -16,14 +16,10 @@ export const options = {
 };
 
 export default function () {
-  const res = http.get('https://mardan.local/api/health', {
-    headers: { 'Connection': 'keep-alive' },
-  });
-  
+  const res = http.get('https://mardan.local/api/health');
   check(res, {
     'is status 200': (r) => r.status === 200,
     'uptime is returned': (r) => r.json('status') === 'OK',
   });
-  
   sleep(1);
 }
