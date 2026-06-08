@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Mardan Smart City Project
   sourceRepos:
-  - 'https://github.com/Awaisbacha55/mardan-smart-city.git'
+  - 'https://github.com/shoaibikhan-dev/mardan-smart.git'
   destinations:
   - namespace: mardan-smart-city
     server: https://kubernetes.default.svc
