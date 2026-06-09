@@ -13,10 +13,9 @@ export const options = {
     http_req_duration: ['p(95)<1000'],
     http_req_failed: ['rate<0.05'],
   },
-  insecureSkipTLSVerify: true,
 };
 
-const BASE_URL = 'https://mardan.local';
+const BASE_URL = 'http://192.168.100.188:31724';
 
 export default function () {
   // Test 1: Health check
