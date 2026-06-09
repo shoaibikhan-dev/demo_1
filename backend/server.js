@@ -1,6 +1,7 @@
 const express    = require('express');
 const helmet     = require('helmet');
-const morgan     = require('morgan');
+const pinoHttp   = require('pino-http');
+const logger     = require('./config/logger');
 const path       = require('path');
 const rateLimit  = require('express-rate-limit');
 const { RedisStore } = require('rate-limit-redis');
@@ -38,11 +39,22 @@ app.use((req, res, next) => {
 // ── Security ──────────────────────────────────────────────────────────────────
 app.use(helmet({
   crossOriginResourcePolicy: false,
-  contentSecurityPolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc:  ["'self'", "'unsafe-inline'"],
+      styleSrc:   ["'self'", "'unsafe-inline'"],
+      imgSrc:     ["'self'", "data:", "blob:"],
+      connectSrc: ["'self'"],
+      fontSrc:    ["'self'"],
+      objectSrc:  ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  },
 }));
 
 // ── Logging ───────────────────────────────────────────────────────────────────
-app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+app.use(pinoHttp({ logger }));
 
 // ── Body Parsers ──────────────────────────────────────────────────────────────
 app.use(express.json({ limit: '10mb' }));
@@ -126,7 +138,7 @@ app.use((_req, res) => {
 
 // ── Global Error Handler ──────────────────────────────────────────────────────
 app.use((err, _req, res, _next) => {
-  console.error(`[${new Date().toISOString()}] ERROR:`, err.stack);
+  logger.error({ err }, '[${new Date().toISOString()}] ERROR:`, err.stack);
   res.status(err.status || 500).json({
     success: false,
     message: err.status ? err.message : 'Internal Server Error',

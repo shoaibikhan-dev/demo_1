@@ -3,6 +3,7 @@ const User      = require('../models/User');
 const path      = require('path');
 const { redisClient } = require('../config/redis');
 const { notificationQueue } = require('../config/queue');
+const logger = require('../config/logger');
 
 const generateTrackingId = () =>
   'MSC-' + Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -15,7 +16,7 @@ const invalidateComplaintCache = async () => {
     const keys = await redisClient.keys('complaints:*');
     if (keys.length > 0) await redisClient.del(keys);
   } catch (err) {
-    console.error('Cache invalidation error:', err.message);
+    logger.error({ err }, 'Cache invalidation error');
   }
 };
 
@@ -43,8 +44,8 @@ exports.getAllComplaints = async (req, res) => {
   try {
     const cacheKey = `complaints:all:${JSON.stringify(req.query)}`;
     const cached = await redisClient.get(cacheKey);
-    if (cached) { console.log('✅ Cache HIT'); return res.json(JSON.parse(cached)); }
-    console.log('❌ Cache MISS');
+    if (cached) { logger.info('Cache HIT'); return res.json(JSON.parse(cached)); }
+    logger.info('Cache MISS');
     const { status, category, priority, search, page = 1, limit = 10, sortBy = 'createdAt', order = 'DESC' } = req.query;
     const { Op } = require('sequelize');
     const where = {};

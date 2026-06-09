@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const jwt    = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
+const logger = require('../config/logger');
 const User = require('../models/User');
 
 // Helper: generate JWT
@@ -45,7 +46,7 @@ exports.register = async (req, res) => {
       user: { id: user.id, name: user.name, email: user.email, role: user.role },
     });
   } catch (error) {
-    console.error(`[Register] Error for ${email}:`, error.message);
+    logger.error({ err: error, email }, 'Register failed');
     res.status(500).json({ success: false, message: 'Registration failed. Please try again later.' });
   }
 };
@@ -73,7 +74,7 @@ exports.login = async (req, res) => {
       user: { id: user.id, name: user.name, email: user.email, role: user.role },
     });
   } catch (err) {
-    console.error(`[Login] Error for ${email}:`, err.message);
+    logger.error({ err, email }, 'Login failed');
     res.status(500).json({ success: false, message: 'Login failed. Please try again later.' });
   }
 };
