@@ -17,6 +17,11 @@ export const options = {
 
 const BASE_URL = 'http://192.168.100.188:31724';
 
+const users = Array.from({ length: 50 }, (_, i) => ({
+  email: `testuser${i + 1}@mardan.gov.pk`,
+  password: 'password',
+}));
+
 export default function () {
   // Test 1: Health check
   const healthRes = http.get(`${BASE_URL}/api/health`);
@@ -24,16 +29,13 @@ export default function () {
     'health status 200': (r) => r.status === 200,
     'health returns OK': (r) => r.json('status') === 'OK',
   });
-
   sleep(0.5);
 
-  // Test 2: Login (bcrypt + DB query)
+  // Test 2: Login with different users
+  const user = users[__VU % 50];
   const loginRes = http.post(
     `${BASE_URL}/api/v1/auth/login`,
-    JSON.stringify({
-      email: 'admin@mardan.gov.pk',
-      password: 'Admin@1234',
-    }),
+    JSON.stringify({ email: user.email, password: user.password }),
     { headers: { 'Content-Type': 'application/json' } }
   );
   check(loginRes, {
@@ -42,10 +44,9 @@ export default function () {
   });
 
   const token = loginRes.status === 200 ? loginRes.json('token') : null;
-
   sleep(0.5);
 
-  // Test 3: Get complaints (DB query + Redis cache)
+  // Test 3: Get complaints
   if (token) {
     const complaintsRes = http.get(`${BASE_URL}/api/v1/complaints`, {
       headers: {
@@ -57,15 +58,14 @@ export default function () {
       'complaints status 200': (r) => r.status === 200,
       'complaints response time < 1s': (r) => r.timings.duration < 1000,
     });
-
     sleep(0.5);
 
-    // Test 4: Submit a complaint (DB write)
+    // Test 4: Submit complaint
     const submitRes = http.post(
       `${BASE_URL}/api/v1/complaints`,
       JSON.stringify({
-        title: 'Load Test Complaint',
-        description: 'This is a load test complaint submission',
+        title: `Load Test Complaint ${__VU}`,
+        description: 'This is a load test complaint',
         category: 'Infrastructure',
         priority: 'medium',
         location: 'Mardan City Center',
