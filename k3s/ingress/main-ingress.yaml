@@ -3,9 +3,8 @@ kind: Ingress
 metadata:
   name: main-ingress
   namespace: mardan-smart-city
-  annotations:
-    kubernetes.io/ingress.class: "traefik"
 spec:
+  ingressClassName: traefik
   tls:
   - hosts:
     - mardan.local
