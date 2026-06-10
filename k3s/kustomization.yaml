@@ -32,3 +32,4 @@ resources:
   - policies/db-access.yaml
   - policies/monitoring-access.yaml
   - observability/prometheus-deployment.yaml
+  - observability/node-exporter.yaml

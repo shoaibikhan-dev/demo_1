@@ -13,9 +13,22 @@ spec:
       labels:
         app: grafana
     spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 472
+        fsGroup: 472
+        seccompProfile:
+          type: RuntimeDefault
       containers:
       - name: grafana
         image: grafana/grafana:11.1.0
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop:
+            - ALL
         ports:
         - containerPort: 3000
         env:
@@ -31,6 +44,16 @@ spec:
           limits:
             cpu: "250m"
             memory: "256Mi"
+        volumeMounts:
+        - name: grafana-storage
+          mountPath: /var/lib/grafana
+        - name: tmp-volume
+          mountPath: /tmp
+      volumes:
+      - name: grafana-storage
+        emptyDir: {}
+      - name: tmp-volume
+        emptyDir: {}
 ---
 apiVersion: v1
 kind: Service
