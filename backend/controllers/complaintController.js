@@ -31,14 +31,28 @@ exports.createComplaint = async (req, res) => {
   if (!title || !description || !category)
     return res.status(400).json({ success: false, message: 'Title, description and category are required.' });
   try {
-    const trackingId = generateTrackingId();
-    const imageUrl   = buildImageUrl(req, req.file);
-    const complaint = await Complaint.create({
-      title: title.trim(), description: description.trim(),
-      category, priority: priority || 'medium',
-      location: location?.trim() || null,
-      imageUrl, trackingId, userId: req.user.id,
-    });
+    const imageUrl = buildImageUrl(req, req.file);
+    let complaint;
+    let attempts = 0;
+    while (attempts < 5) {
+      try {
+        const trackingId = generateTrackingId();
+        complaint = await Complaint.create({
+          title: title.trim(), description: description.trim(),
+          category, priority: priority || 'medium',
+          location: location?.trim() || null,
+          imageUrl, trackingId, userId: req.user.id,
+        });
+        break;
+      } catch (err) {
+        if (err.name === 'SequelizeUniqueConstraintError') {
+          attempts++;
+          if (attempts >= 5) throw new Error('Could not generate unique tracking ID. Please try again.');
+        } else {
+          throw err;
+        }
+      }
+    }
     await invalidateComplaintCache();
     res.status(201).json({ success: true, data: complaint });
   } catch (err) {

@@ -51,7 +51,8 @@ spec:
           mountPath: /tmp
       volumes:
       - name: grafana-storage
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: grafana-pvc
       - name: tmp-volume
         emptyDir: {}
 ---

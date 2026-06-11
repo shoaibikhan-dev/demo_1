@@ -8,7 +8,7 @@ const { body }    = require('express-validator');
 const registerRules = [
   body('name').trim().notEmpty().withMessage('Name is required'),
   body('email').isEmail().withMessage('Valid email required'),
-  body('cnic').trim().isLength({ min: 13 }).withMessage('Valid CNIC is required'),
+  body('cnic').trim().matches(/^\d{5}-\d{7}-\d$/).withMessage('CNIC must be in format XXXXX-XXXXXXX-X'),
   body('phone').trim().notEmpty().withMessage('Phone number is required'),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
 ];

@@ -11,7 +11,13 @@ spec:
   - Ingress
   - Egress
   ingress:
-  - {}
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: traefik
   egress:
   - to:
     - podSelector:
@@ -51,7 +57,13 @@ spec:
   - Ingress
   - Egress
   ingress:
-  - {}
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: traefik
   egress:
   - to:
     - podSelector:

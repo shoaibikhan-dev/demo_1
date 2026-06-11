@@ -15,10 +15,11 @@ export const options = {
   },
 };
 
-const BASE_URL = 'http://192.168.100.188:31724';
+const BASE_URL = 'http://192.168.100.188';
 
 export default function () {
-  const res = http.get(`${BASE_URL}/api/health`);
+  const params = { headers: { 'Host': 'mardan.local' } };
+  const res = http.get(`${BASE_URL}/api/health`, params);
   check(res, {
     'health status 200': (r) => r.status === 200,
     'health returns OK': (r) => r.json('status') === 'OK',

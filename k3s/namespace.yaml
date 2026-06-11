@@ -3,7 +3,6 @@ kind: Namespace
 metadata:
   name: mardan-smart-city
   labels:
-    istio-injection: enabled
     pod-security.kubernetes.io/enforce: restricted
     pod-security.kubernetes.io/warn: restricted
     pod-security.kubernetes.io/audit: restricted

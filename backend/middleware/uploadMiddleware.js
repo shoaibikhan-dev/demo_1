@@ -7,17 +7,11 @@ const { fileTypeFromBuffer } = require('file-type');
 const uploadDir = path.join(__dirname, '..', 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
 
-// ── Disk storage config ──────────────────────────────────────────────────────
-const storage = multer.diskStorage({
-  destination: (_req, _file, cb) => cb(null, uploadDir),
-  filename: (_req, file, cb) => {
-    const unique = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
-    cb(null, `complaint-${unique}${path.extname(file.originalname)}`);
-  },
-});
+// ── Memory storage (magic bytes check ke baad manually save karenge) ─────────
+const storage = multer.memoryStorage();
 
-// ── File filter: images only ─────────────────────────────────────────────────
-const fileFilter = async (_req, file, cb) => {
+// ── File filter: extension + MIME check ──────────────────────────────────────
+const fileFilter = (_req, file, cb) => {
   const allowed = /jpeg|jpg|png|gif|webp/;
   const extOk   = allowed.test(path.extname(file.originalname).toLowerCase());
   const mimeOk  = allowed.test(file.mimetype);
@@ -28,7 +22,28 @@ const fileFilter = async (_req, file, cb) => {
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+  limits: { fileSize: 5 * 1024 * 1024 },
 });
 
-module.exports = upload;
+// ── Magic bytes verify + disk save middleware ─────────────────────────────────
+const verifyAndSave = async (req, res, next) => {
+  if (!req.file) return next();
+  try {
+    const type = await fileTypeFromBuffer(req.file.buffer);
+    if (!type || !/^image\//.test(type.mime)) {
+      return res.status(400).json({ error: 'File content does not match image type.' });
+    }
+    // Disk pe save karo
+    const unique   = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const filename = `complaint-${unique}${path.extname(req.file.originalname)}`;
+    const filepath = path.join(uploadDir, filename);
+    fs.writeFileSync(filepath, req.file.buffer);
+    req.file.path     = filepath;
+    req.file.filename = filename;
+    next();
+  } catch (err) {
+    next(err);
+  }
+};
+
+module.exports = { upload, verifyAndSave };

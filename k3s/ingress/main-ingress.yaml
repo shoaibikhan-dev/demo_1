@@ -85,33 +85,6 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: api-ingress
-  namespace: mardan-smart-city
-  annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: >-
-      mardan-smart-city-security-headers@kubernetescrd,
-      mardan-smart-city-api-rate-limit@kubernetescrd
-spec:
-  ingressClassName: traefik
-  tls:
-  - hosts:
-    - mardan.local
-    secretName: mardan-tls
-  rules:
-  - host: mardan.local
-    http:
-      paths:
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: mardan-backend
-            port:
-              number: 5000
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
   name: http-redirect
   namespace: mardan-smart-city
   annotations:

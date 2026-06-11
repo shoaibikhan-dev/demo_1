@@ -8,6 +8,8 @@ resources:
   - secrets/grafana-sealed-secret.yaml
   - storage/redis-pvc.yaml
   - storage/uploads-pvc.yaml
+  - storage/grafana-pvc.yaml
+  - storage/prometheus-pvc.yaml
   - security/service-accounts.yaml
   - security/roles.yaml
   - security/role-bindings.yaml
@@ -34,3 +36,4 @@ resources:
   - observability/prometheus-deployment.yaml
   - observability/node-exporter.yaml
   - observability/node-exporter-namespace.yaml
+  - security/gatekeeper-constraints.yaml
