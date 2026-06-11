@@ -45,15 +45,16 @@ spec:
     kind: 'SealedSecret'
   - group: 'traefik.io'
     kind: 'Middleware'
+
+  clusterResourceWhitelist:
+  - group: ''
+    kind: 'Namespace'
   - group: 'constraints.gatekeeper.sh'
     kind: '*'
   - group: 'templates.gatekeeper.sh'
     kind: '*'
   - group: 'config.gatekeeper.sh'
     kind: '*'
-  clusterResourceWhitelist:
-  - group: ''
-    kind: 'Namespace'
   roles:
   - name: read-only
     description: Read only access
