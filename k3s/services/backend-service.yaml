@@ -8,10 +8,9 @@ metadata:
     prometheus.io/path: "/api/metrics"
     prometheus.io/port: "5000"
 spec:
-  type: NodePort
+  type: ClusterIP
   selector:
     app: backend
   ports:
   - port: 5000
     targetPort: 5000
-    nodePort: 31724

@@ -18,25 +18,48 @@ metadata:
 spec:
   schedule: "0 2 * * *"
   concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
         spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 999
+            fsGroup: 999
+            seccompProfile:
+              type: RuntimeDefault
           containers:
           - name: pg-backup
             image: postgres:15-alpine
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                - ALL
             command:
             - /bin/sh
             - -c
-            - "export PGPASSWORD=$POSTGRES_PASSWORD && pg_dump -U $POSTGRES_USER -h postgres -d $POSTGRES_DB -F c -f /backup/db_backup_$(date +%Y%m%d).dump"
+            - |
+              export PGPASSWORD=$POSTGRES_PASSWORD
+              pg_dump -U $POSTGRES_USER -h postgres -d $POSTGRES_DB \
+                -F c -f /backup/db_backup_$(date +%Y%m%d_%H%M%S).dump
+              find /backup -name "*.dump" -mtime +7 -delete
             envFrom:
             - secretRef:
                 name: postgres-secrets
             volumeMounts:
             - name: backup-storage
               mountPath: /backup
+            - name: tmp-volume
+              mountPath: /tmp
           restartPolicy: OnFailure
           volumes:
           - name: backup-storage
             persistentVolumeClaim:
               claimName: postgres-backup-pvc
+          - name: tmp-volume
+            emptyDir: {}
