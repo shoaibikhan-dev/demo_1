@@ -48,20 +48,9 @@ spec:
         tier: database
     spec:
       automountServiceAccountToken: false
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 1000
-        fsGroup: 1000
-        seccompProfile:
-          type: RuntimeDefault
       containers:
       - name: pgbouncer
         image: pgbouncer/pgbouncer:latest
-        securityContext:
-          allowPrivilegeEscalation: false
-          readOnlyRootFilesystem: false
-          capabilities:
-            drop: [ALL]
         ports:
         - containerPort: 5432
           name: postgres
