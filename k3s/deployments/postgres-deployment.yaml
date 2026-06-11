@@ -18,9 +18,6 @@ spec:
     spec:
       automountServiceAccountToken: false
       securityContext:
-        runAsNonRoot: true
-        runAsUser: 999
-        fsGroup: 999
         seccompProfile:
           type: RuntimeDefault
       containers:
@@ -28,8 +25,6 @@ spec:
         image: postgres:15-alpine
         securityContext:
           allowPrivilegeEscalation: false
-          runAsNonRoot: true
-          runAsUser: 999
           capabilities:
             drop: [ALL]
         args:
