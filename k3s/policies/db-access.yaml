@@ -16,6 +16,9 @@ spec:
           app: backend
     - podSelector:
         matchLabels:
+          app: pgbouncer
+    - podSelector:
+        matchLabels:
           job-name: postgres-backup
     ports:
     - protocol: TCP
@@ -40,7 +43,7 @@ spec:
           app: backend
     ports:
     - protocol: TCP
-      port: 5432
+      port: 6432
   egress:
   - to:
     - podSelector:

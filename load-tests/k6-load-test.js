@@ -13,7 +13,7 @@ export const options = {
     http_req_failed: ['rate<0.05'],
   },
 };
-const BASE_URL = 'http://192.168.100.188:31724';
+const BASE_URL = 'http://192.168.100.224:31724';
 export default function () {
   const params = { headers: { 'Host': 'mardan.local' } };
   const res = http.get(`${BASE_URL}/api/health`, params);

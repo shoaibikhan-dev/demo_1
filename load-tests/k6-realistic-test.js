@@ -15,7 +15,7 @@ export const options = {
   },
 };
 
-const BASE_URL = 'http://192.168.100.188:31724';
+const BASE_URL = 'http://192.168.100.224:31724';
 const HOST = 'mardan.local';
 
 export function setup() {

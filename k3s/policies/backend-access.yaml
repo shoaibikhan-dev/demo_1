@@ -22,7 +22,7 @@ spec:
   - to:
     - podSelector:
         matchLabels:
-          app: postgres
+          app: pgbouncer
     ports:
     - protocol: TCP
       port: 5432
