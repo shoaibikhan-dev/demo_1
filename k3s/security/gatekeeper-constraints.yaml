@@ -68,3 +68,99 @@ spec:
       kinds: ["Deployment", "StatefulSet", "DaemonSet"]
     namespaces:
     - mardan-smart-city
+---
+# ── Template: Block Privilege Escalation ─────────────────────────────────────
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8snoprivilegeescalation
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sNoPrivilegeEscalation
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8snoprivilegeescalation
+      violation[{"msg": msg}] {
+        container := input.review.object.spec.containers[_]
+        container.securityContext.allowPrivilegeEscalation == true
+        msg := sprintf("Container '%v' must not allow privilege escalation", [container.name])
+      }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sNoPrivilegeEscalation
+metadata:
+  name: no-privilege-escalation
+spec:
+  match:
+    kinds:
+    - apiGroups: ["apps"]
+      kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+    namespaces:
+    - mardan-smart-city
+---
+# ── Template: Require ReadOnly Root Filesystem ────────────────────────────────
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8srequirereadonlyfs
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sRequireReadOnlyFs
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8srequirereadonlyfs
+      violation[{"msg": msg}] {
+        container := input.review.object.spec.containers[_]
+        not container.securityContext.readOnlyRootFilesystem == true
+        msg := sprintf("Container '%v' must have readOnlyRootFilesystem: true", [container.name])
+      }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sRequireReadOnlyFs
+metadata:
+  name: require-readonly-filesystem
+spec:
+  match:
+    kinds:
+    - apiGroups: ["apps"]
+      kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+    namespaces:
+    - mardan-smart-city
+---
+# ── Template: Block Root User ─────────────────────────────────────────────────
+apiVersion: templates.gatekeeper.sh/v1
+kind: ConstraintTemplate
+metadata:
+  name: k8sblockrootuser
+spec:
+  crd:
+    spec:
+      names:
+        kind: K8sBlockRootUser
+  targets:
+  - target: admission.k8s.gatekeeper.sh
+    rego: |
+      package k8sblockrootuser
+      violation[{"msg": msg}] {
+        container := input.review.object.spec.containers[_]
+        not input.review.object.spec.securityContext.runAsNonRoot == true
+        msg := sprintf("Container '%v' must run as non-root user", [container.name])
+      }
+---
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sBlockRootUser
+metadata:
+  name: block-root-user
+spec:
+  match:
+    kinds:
+    - apiGroups: ["apps"]
+      kinds: ["Deployment", "StatefulSet", "DaemonSet"]
+    namespaces:
+    - mardan-smart-city

@@ -40,6 +40,12 @@ app.use((req, res, next) => {
 
 // ── Security Headers (Helmet) ─────────────────────────────────────────────────
 app.use(helmet({
+  hsts: {
+    maxAge: 31536000,
+    includeSubDomains: true,
+    preload: true,
+  },
+  referrerPolicy: { policy: "strict-origin-when-cross-origin" },
   crossOriginResourcePolicy: false,
   contentSecurityPolicy: {
     directives: {

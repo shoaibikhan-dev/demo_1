@@ -30,7 +30,6 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING(20),
     allowNull: true,
   },
-
   role: {
     type: DataTypes.STRING(10),
     defaultValue: 'citizen',
@@ -42,6 +41,17 @@ const User = sequelize.define('User', {
     type: DataTypes.BOOLEAN,
     defaultValue: true,
   },
+
+  failedLoginAttempts: {
+    type: DataTypes.INTEGER,
+    defaultValue: 0,
+  },
+
+  lockedUntil: {
+    type: DataTypes.DATE,
+    allowNull: true,
+  },
+
 }, {
   tableName: 'users',
   timestamps: true,
