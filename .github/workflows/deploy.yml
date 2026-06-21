@@ -20,33 +20,33 @@ jobs:
       - name: Login to Container Registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERUSERNAME }}
-          password: ${{ secrets.DOCKERPASSWORD }}
+          username: ${{ secrets.DOCKERUSERNAME1 }}
+          password: ${{ secrets.DOCKERPASSWORD1 }}
 
       - name: Build Auth Service Image
         run: |
-          docker build -t ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }} \
-            -t ${{ secrets.DOCKERUSERNAME }}/auth-service:latest ./services/auth-service
+          docker build -t ${{ secrets.DOCKERUSERNAME1 }}/auth-service:${{ github.sha }} \
+            -t ${{ secrets.DOCKERUSERNAME1 }}/auth-service:latest ./services/auth-service
 
       - name: Build Complaint Service Image
         run: |
-          docker build -t ${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }} \
-            -t ${{ secrets.DOCKERUSERNAME }}/complaint-service:latest ./services/complaint-service
+          docker build -t ${{ secrets.DOCKERUSERNAME1 }}/complaint-service:${{ github.sha }} \
+            -t ${{ secrets.DOCKERUSERNAME1 }}/complaint-service:latest ./services/complaint-service
 
       - name: Build Notification Service Image
         run: |
-          docker build -t ${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }} \
-            -t ${{ secrets.DOCKERUSERNAME }}/notification-service:latest ./services/notification-service
+          docker build -t ${{ secrets.DOCKERUSERNAME1 }}/notification-service:${{ github.sha }} \
+            -t ${{ secrets.DOCKERUSERNAME1 }}/notification-service:latest ./services/notification-service
 
       - name: Build Frontend Image
         run: |
-          docker build -t ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }} \
-            -t ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:latest ./frontend
+          docker build -t ${{ secrets.DOCKERUSERNAME1 }}/mardan-frontend:${{ github.sha }} \
+            -t ${{ secrets.DOCKERUSERNAME1 }}/mardan-frontend:latest ./frontend
 
       - name: Trivy Scan Auth Service
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}
+          image-ref: ${{ secrets.DOCKERUSERNAME1 }}/auth-service:${{ github.sha }}
           format: table
           exit-code: '1'
           severity: CRITICAL,HIGH
@@ -56,7 +56,7 @@ jobs:
       - name: Trivy Scan Complaint Service
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}
+          image-ref: ${{ secrets.DOCKERUSERNAME1 }}/complaint-service:${{ github.sha }}
           format: table
           exit-code: '1'
           severity: CRITICAL,HIGH
@@ -66,7 +66,7 @@ jobs:
       - name: Trivy Scan Notification Service
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}
+          image-ref: ${{ secrets.DOCKERUSERNAME1 }}/notification-service:${{ github.sha }}
           format: table
           exit-code: '1'
           severity: CRITICAL,HIGH
@@ -76,7 +76,7 @@ jobs:
       - name: Trivy Scan Frontend
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}
+          image-ref: ${{ secrets.DOCKERUSERNAME1 }}/mardan-frontend:${{ github.sha }}
           format: table
           exit-code: '1'
           severity: CRITICAL,HIGH
@@ -85,23 +85,23 @@ jobs:
 
       - name: Push Auth Service Image
         run: |
-          docker push ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}
-          docker push ${{ secrets.DOCKERUSERNAME }}/auth-service:latest
+          docker push ${{ secrets.DOCKERUSERNAME1 }}/auth-service:${{ github.sha }}
+          docker push ${{ secrets.DOCKERUSERNAME1 }}/auth-service:latest
 
       - name: Push Complaint Service Image
         run: |
-          docker push ${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}
-          docker push ${{ secrets.DOCKERUSERNAME }}/complaint-service:latest
+          docker push ${{ secrets.DOCKERUSERNAME1 }}/complaint-service:${{ github.sha }}
+          docker push ${{ secrets.DOCKERUSERNAME1 }}/complaint-service:latest
 
       - name: Push Notification Service Image
         run: |
-          docker push ${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}
-          docker push ${{ secrets.DOCKERUSERNAME }}/notification-service:latest
+          docker push ${{ secrets.DOCKERUSERNAME1 }}/notification-service:${{ github.sha }}
+          docker push ${{ secrets.DOCKERUSERNAME1 }}/notification-service:latest
 
       - name: Push Frontend Image
         run: |
-          docker push ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}
-          docker push ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:latest
+          docker push ${{ secrets.DOCKERUSERNAME1 }}/mardan-frontend:${{ github.sha }}
+          docker push ${{ secrets.DOCKERUSERNAME1 }}/mardan-frontend:latest
 
       - name: Sign Auth Service Image
         env:
@@ -109,7 +109,7 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGNPASSWORD }}
         run: |
           cosign sign --key env://COSIGN_PRIVATE_KEY --yes \
-            ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}
+            ${{ secrets.DOCKERUSERNAME1 }}/auth-service:${{ github.sha }}
 
       - name: Sign Complaint Service Image
         env:
@@ -117,7 +117,7 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGNPASSWORD }}
         run: |
           cosign sign --key env://COSIGN_PRIVATE_KEY --yes \
-            ${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}
+            ${{ secrets.DOCKERUSERNAME1 }}/complaint-service:${{ github.sha }}
 
       - name: Sign Notification Service Image
         env:
@@ -125,7 +125,7 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGNPASSWORD }}
         run: |
           cosign sign --key env://COSIGN_PRIVATE_KEY --yes \
-            ${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}
+            ${{ secrets.DOCKERUSERNAME1 }}/notification-service:${{ github.sha }}
 
       - name: Sign Frontend Image
         env:
@@ -133,14 +133,14 @@ jobs:
           COSIGN_PASSWORD: ${{ secrets.COSIGNPASSWORD }}
         run: |
           cosign sign --key env://COSIGN_PRIVATE_KEY --yes \
-            ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}
+            ${{ secrets.DOCKERUSERNAME1 }}/mardan-frontend:${{ github.sha }}
 
       - name: Update Image Tags in Kubernetes YAML
         run: |
-          sed -i "s|${{ secrets.DOCKERUSERNAME }}/auth-service[^\"]*|${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}|g" k3s/deployments/auth-deployment.yaml
-          sed -i "s|${{ secrets.DOCKERUSERNAME }}/complaint-service[^\"]*|${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}|g" k3s/deployments/complaint-deployment.yaml
-          sed -i "s|${{ secrets.DOCKERUSERNAME }}/notification-service[^\"]*|${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}|g" k3s/deployments/notification-deployment.yaml
-          sed -i "s|${{ secrets.DOCKERUSERNAME }}/mardan-frontend[^\"]*|${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}|g" k3s/deployments/frontend-deployment.yaml
+          sed -i "s|${{ secrets.DOCKERUSERNAME1 }}/auth-service[^\"]*|${{ secrets.DOCKERUSERNAME1 }}/auth-service:${{ github.sha }}|g" k3s/deployments/auth-deployment.yaml
+          sed -i "s|${{ secrets.DOCKERUSERNAME1 }}/complaint-service[^\"]*|${{ secrets.DOCKERUSERNAME1 }}/complaint-service:${{ github.sha }}|g" k3s/deployments/complaint-deployment.yaml
+          sed -i "s|${{ secrets.DOCKERUSERNAME1 }}/notification-service[^\"]*|${{ secrets.DOCKERUSERNAME1 }}/notification-service:${{ github.sha }}|g" k3s/deployments/notification-deployment.yaml
+          sed -i "s|${{ secrets.DOCKERUSERNAME1 }}/mardan-frontend[^\"]*|${{ secrets.DOCKERUSERNAME1 }}/mardan-frontend:${{ github.sha }}|g" k3s/deployments/frontend-deployment.yaml
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git add k3s/deployments/auth-deployment.yaml
