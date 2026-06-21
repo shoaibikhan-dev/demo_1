@@ -1,5 +1,11 @@
-const Bull = require('bull');
+const { Queue, Worker } = require('bullmq');
 const nodemailer = require('nodemailer');
+
+const connection = {
+  host: process.env.REDIS_HOST || 'redis',
+  port: parseInt(process.env.REDIS_PORT || '6379'),
+  password: process.env.REDIS_PASSWORD || undefined,
+};
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
@@ -11,31 +17,22 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const notificationQueue = new Bull('notifications', {
-  redis: {
-    host: process.env.REDIS_HOST || 'redis',
-    port: parseInt(process.env.REDIS_PORT || '6379'),
-    password: process.env.REDIS_PASSWORD || undefined,
-  },
+const notificationQueue = new Queue('notifications', {
+  connection,
   defaultJobOptions: {
     attempts: 5,
-    backoff: {
-      type: 'exponential',
-      delay: 2000,
-    },
-    removeOnComplete: 100,
-    removeOnFail: 50,
-  }
+    backoff: { type: 'exponential', delay: 2000 },
+    removeOnComplete: { count: 100 },
+    removeOnFail: { count: 50 },
+  },
 });
 
-notificationQueue.process(async (job) => {
+const worker = new Worker('notifications', async (job) => {
   const { complaintId, status, userEmail } = job.data;
-
   if (!process.env.SMTP_USER || !userEmail) {
     console.log(`📧 [SKIP] No SMTP config for complaint ${complaintId}`);
     return;
   }
-
   await transporter.sendMail({
     from: `"Mardan Smart City" <${process.env.SMTP_USER}>`,
     to: userEmail,
@@ -45,20 +42,17 @@ notificationQueue.process(async (job) => {
       <p>Your complaint <strong>${complaintId}</strong> status updated to <strong>${status}</strong>.</p>
     `,
   });
-
   console.log(`✅ Email sent to ${userEmail}`);
-});
+}, { connection });
 
-notificationQueue.on('completed', (job) => {
+worker.on('completed', (job) => {
   console.log(`✅ Job ${job.id} done after ${job.attemptsMade} attempt(s)`);
 });
-
-notificationQueue.on('failed', (job, err) => {
-  console.error(`❌ Job ${job.id} failed (attempt ${job.attemptsMade}/${job.opts.attempts}):`, err.message);
+worker.on('failed', (job, err) => {
+  console.error(`❌ Job ${job.id} failed:`, err.message);
 });
-
-notificationQueue.on('stalled', (job) => {
-  console.warn(`⚠️ Job ${job.id} stalled — will retry`);
+worker.on('stalled', (jobId) => {
+  console.warn(`⚠️ Job ${jobId} stalled — will retry`);
 });
 
 module.exports = { notificationQueue };
