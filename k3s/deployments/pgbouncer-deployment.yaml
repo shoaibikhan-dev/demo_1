@@ -33,7 +33,7 @@ spec:
           capabilities:
             drop: ["ALL"]
         ports:
-        - containerPort: 6432
+        - containerPort: 5432
           name: postgres
         env:
         - name: DB_HOST
@@ -72,13 +72,13 @@ spec:
             memory: "256Mi"
         livenessProbe:
           tcpSocket:
-            port: 6432
+            port: 5432
           initialDelaySeconds: 15
           periodSeconds: 10
           failureThreshold: 3
         readinessProbe:
           tcpSocket:
-            port: 6432
+            port: 5432
           initialDelaySeconds: 5
           periodSeconds: 5
           failureThreshold: 3
