@@ -31,7 +31,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: complaint-service
-        image: shanisha/complaint-service:0692464a8ec1e1e609fc825aa19c19ae3702d616
+        image: shanisha/complaint-service:b9b2c21aa37ffb21fb318724ba327a5ef45e3363
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
