@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mardan-smart-city
+  name: demo-app
   namespace: argocd
 spec:
   project: mardan-project
