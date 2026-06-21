@@ -31,7 +31,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: auth-service
-        image: shanisha/auth-service:db3e2a111b3758187e24447d6fe741050c2ae177
+        image: shoaibikhandev/auth-service:db3e2a111b3758187e24447d6fe741050c2ae177
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
@@ -63,7 +63,7 @@ spec:
           httpGet:
             path: /api/health/ready
             port: 5001
-          initialDelaySeconds: 10
+          initialDelaySeconds: 30
           periodSeconds: 10
           failureThreshold: 5
           timeoutSeconds: 5
