@@ -60,7 +60,7 @@ spec:
           value: /var/lib/postgresql/data/pgdata
         envFrom:
         - secretRef:
-          name: postgres-secrets
+            name: postgres-secrets
         livenessProbe:
           exec:
             command: ["pg_isready", "-U", "postgres"]
