@@ -3,8 +3,6 @@ kind: StatefulSet
 metadata:
   name: postgres
   namespace: demo-namespace
-  labels:
-    app: postgres
 spec:
   serviceName: postgres
   replicas: 1
@@ -16,13 +14,6 @@ spec:
       labels:
         app: postgres
     spec:
-      automountServiceAccountToken: false
-      securityContext:
-        runAsNonRoot: true
-        runAsUser: 999
-        fsGroup: 999
-        seccompProfile:
-          type: RuntimeDefault
       containers:
       - name: postgres
         image: postgres:15-alpine
@@ -32,74 +23,50 @@ spec:
           runAsUser: 999
           readOnlyRootFilesystem: true
           capabilities:
-            drop: [ALL]
+            drop:
+            - ALL
         env:
         - name: POSTGRES_HOST_AUTH_METHOD
           value: "md5"
-        args:
-          - "postgres"
-          - "-c"
-          - "max_connections=1000"
-          - "-c"
-          - "shared_buffers=512MB"
-          - "-c"
-          - "work_mem=16MB"
-          - "-c"
-          - "effective_cache_size=1GB"
-          - "-c"
-          - "maintenance_work_mem=128MB"
-          - "-c"
-          - "checkpoint_completion_target=0.9"
-          - "-c"
-          - "wal_buffers=16MB"
-          - "-c"
-          - "random_page_cost=1.1"
-          - "-c"
-          - "effective_io_concurrency=200"
-        ports:
-        - containerPort: 5432
-        env:
         - name: PGDATA
           value: /var/lib/postgresql/data/pgdata
+        args:
+        - "postgres"
+        - "-c"
+        - "max_connections=1000"
+        - "-c"
+        - "shared_buffers=512MB"
+        ports:
+        - containerPort: 5432
+          name: postgres
         envFrom:
         - secretRef:
             name: postgres-secrets
-        livenessProbe:
-          exec:
-            command: ["pg_isready", "-U", "postgres"]
-          initialDelaySeconds: 30
-          periodSeconds: 10
-          timeoutSeconds: 5
-          failureThreshold: 3
         volumeMounts:
-        - name: postgres-data
-          mountPath: /var/lib/postgresql/data
-        - name: init-scripts
-          mountPath: /docker-entrypoint-initdb.d
-        - name: socket-volume
-          mountPath: /var/run/postgresql
-        - name: tmp-volume
-          mountPath: /tmp
-        resources:
-          requests:
-            cpu: "500m"
-            memory: "2Gi"
-          limits:
-            cpu: "1000m"
-            memory: "3Gi"
-      volumes:
-      - name: init-scripts
-        configMap:
-          name: postgres-init-scripts
-      - name: socket-volume
-        emptyDir: {}
-      - name: tmp-volume
-        emptyDir: {}
+        - mountPath: /dev/shm
+          name: socket-volume
+        - mountPath: /tmp
+          name: tmp-volume
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-storage
   volumeClaimTemplates:
   - metadata:
-      name: postgres-data
+      name: postgres-storage
     spec:
-      accessModes: [ "ReadWriteOnce" ]
+      accessModes:
+      - ReadWriteOnce
       resources:
         requests:
-          storage: 10Gi
+          storage: 1Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: demo-namespace
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+  selector:
+    app: postgres
