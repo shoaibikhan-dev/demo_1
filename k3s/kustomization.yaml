@@ -17,6 +17,7 @@ resources:
   - security/gatekeeper-constraints.yaml
   - policies/default-deny.yaml
   - policies/backend-access.yaml
+  - policies/redis-access.yaml
   - policies/db-access.yaml
   - policies/monitoring-access.yaml
   - deployments/postgres-deployment.yaml
@@ -28,6 +29,7 @@ resources:
   - deployments/frontend-deployment.yaml
   - services/postgres-service.yaml
   - services/redis-service.yaml
+  - services/mardan-backend-service.yaml
   - services/auth-service.yaml
   - services/complaint-service.yaml
   - services/notification-service.yaml
