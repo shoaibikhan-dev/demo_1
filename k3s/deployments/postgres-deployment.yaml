@@ -51,6 +51,8 @@ spec:
         args:
         - "postgres"
         - "-c"
+        - "password_encryption=md5"
+        - "-c"
         - "max_connections=1000"
         - "-c"
         - "shared_buffers=512MB"
