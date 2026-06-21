@@ -64,7 +64,7 @@ spec:
         - name: PGBOUNCER_IGNORE_STARTUP_PARAMETERS
           value: extra_float_digits
         - name: PGBOUNCER_AUTH_TYPE
-          value: "scram-sha-256"
+          value: "md5"
         resources:
           requests:
             cpu: "100m"
