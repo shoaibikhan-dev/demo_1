@@ -26,6 +26,10 @@ spec:
           sizeLimit: 256Mi
       - name: tmp-volume
         emptyDir: {}
+      - name: run-volume
+        emptyDir:
+          medium: Memory
+          sizeLimit: 64Mi
       containers:
       - name: postgres
         image: postgres:15-alpine
@@ -61,6 +65,8 @@ spec:
           name: socket-volume
         - mountPath: /tmp
           name: tmp-volume
+        - mountPath: /var/run/postgresql
+          name: run-volume
         - mountPath: /var/lib/postgresql/data
           name: postgres-storage
   volumeClaimTemplates:
