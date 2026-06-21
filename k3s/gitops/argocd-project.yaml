@@ -9,11 +9,17 @@ spec:
   - 'https://github.com/shoaibikhan-dev/mardan-smart.git'
   - 'https://github.com/shoaibikhan-dev/demo_1.git'
   destinations:
+  - namespace: argocd
+    server: https://kubernetes.default.svc
   - namespace: demo-namespace
     server: https://kubernetes.default.svc
   - namespace: monitoring
     server: https://kubernetes.default.svc
   namespaceResourceWhitelist:
+  - group: 'argoproj.io'
+    kind: 'Application'
+  - group: 'argoproj.io'
+    kind: 'AppProject'
   - group: 'apps'
     kind: 'Deployment'
   - group: 'apps'
