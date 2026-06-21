@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: pgbouncer
-  namespace: mardan-smart-city
+  namespace: demo-namespace
   labels:
     app: pgbouncer
     tier: database

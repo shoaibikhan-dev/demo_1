@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: complaint-service
-  namespace: mardan-smart-city
+  namespace: demo-namespace
   labels:
     app: complaint-service
     tier: backend

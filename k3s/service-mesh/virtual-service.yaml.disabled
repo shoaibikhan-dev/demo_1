@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: main-route
-  namespace: mardan-smart-city
+  namespace: demo-namespace
 spec:
   hosts:
   - "*"

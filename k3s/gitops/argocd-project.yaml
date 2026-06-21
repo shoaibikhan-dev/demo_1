@@ -9,7 +9,7 @@ spec:
   - 'https://github.com/shoaibikhan-dev/mardan-smart.git'
   - 'https://github.com/shoaibikhan-dev/demo_1.git'
   destinations:
-  - namespace: mardan-smart-city
+  - namespace: demo-namespace
     server: https://kubernetes.default.svc
   - namespace: monitoring
     server: https://kubernetes.default.svc
@@ -50,6 +50,10 @@ spec:
   clusterResourceWhitelist:
   - group: ''
     kind: 'Namespace'
+  - group: 'argoproj.io'
+    kind: 'AppProject'
+  - group: 'argoproj.io'
+    kind: 'Application'
   - group: 'constraints.gatekeeper.sh'
     kind: '*'
   - group: 'templates.gatekeeper.sh'

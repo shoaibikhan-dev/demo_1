@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
   name: backend
-  namespace: mardan-smart-city
+  namespace: demo-namespace
   labels:
     app: backend
     tier: backend

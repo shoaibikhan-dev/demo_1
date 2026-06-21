@@ -2,7 +2,7 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: frontend-pdb
-  namespace: mardan-smart-city
+  namespace: demo-namespace
 spec:
   minAvailable: "50%"
   selector:

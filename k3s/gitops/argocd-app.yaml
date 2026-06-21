@@ -11,7 +11,7 @@ spec:
     path: k3s
   destination:
     server: 'https://kubernetes.default.svc'
-    namespace: mardan-smart-city
+    namespace: demo-namespace
   syncPolicy:
     automated:
       prune: true

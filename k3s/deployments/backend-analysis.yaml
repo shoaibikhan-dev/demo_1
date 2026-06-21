@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AnalysisTemplate
 metadata:
   name: backend-error-rate
-  namespace: mardan-smart-city
+  namespace: demo-namespace
 spec:
   metrics:
   - name: error-rate

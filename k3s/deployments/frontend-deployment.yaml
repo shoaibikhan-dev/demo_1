@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend
-  namespace: mardan-smart-city
+  namespace: demo-namespace
   labels:
     app: frontend
     tier: frontend
