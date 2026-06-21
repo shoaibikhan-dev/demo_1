@@ -55,8 +55,8 @@ metadata:
   namespace: demo-namespace
   annotations:
     traefik.ingress.kubernetes.io/router.middlewares: >-
-      mardan-smart-city-security-headers@kubernetescrd,
-      mardan-smart-city-rate-limit@kubernetescrd
+      demo-namespace-security-headers@kubernetescrd,
+      demo-namespace-rate-limit@kubernetescrd
 spec:
   ingressClassName: traefik
   tls:
@@ -116,7 +116,7 @@ metadata:
   name: http-redirect
   namespace: demo-namespace
   annotations:
-    traefik.ingress.kubernetes.io/router.middlewares: mardan-smart-city-https-redirect@kubernetescrd
+    traefik.ingress.kubernetes.io/router.middlewares: demo-namespace-https-redirect@kubernetescrd
     traefik.ingress.kubernetes.io/router.entrypoints: web
 spec:
   ingressClassName: traefik

@@ -34,7 +34,7 @@ spec:
     - apiGroups: ["apps"]
       kinds: ["Deployment", "StatefulSet", "DaemonSet"]
     namespaces:
-    - mardan-smart-city
+    - demo-namespace
 ---
 # ── Template: Block Latest Tag ────────────────────────────────────────────────
 apiVersion: templates.gatekeeper.sh/v1
@@ -67,7 +67,7 @@ spec:
     - apiGroups: ["apps"]
       kinds: ["Deployment", "StatefulSet", "DaemonSet"]
     namespaces:
-    - mardan-smart-city
+    - demo-namespace
 ---
 # ── Template: Block Privilege Escalation ─────────────────────────────────────
 apiVersion: templates.gatekeeper.sh/v1
@@ -99,7 +99,7 @@ spec:
     - apiGroups: ["apps"]
       kinds: ["Deployment", "StatefulSet", "DaemonSet"]
     namespaces:
-    - mardan-smart-city
+    - demo-namespace
 ---
 # ── Template: Require ReadOnly Root Filesystem ────────────────────────────────
 apiVersion: templates.gatekeeper.sh/v1
@@ -131,7 +131,7 @@ spec:
     - apiGroups: ["apps"]
       kinds: ["Deployment", "StatefulSet", "DaemonSet"]
     namespaces:
-    - mardan-smart-city
+    - demo-namespace
 ---
 # ── Template: Block Root User ─────────────────────────────────────────────────
 apiVersion: templates.gatekeeper.sh/v1
@@ -163,4 +163,4 @@ spec:
     - apiGroups: ["apps"]
       kinds: ["Deployment", "StatefulSet", "DaemonSet"]
     namespaces:
-    - mardan-smart-city
+    - demo-namespace

@@ -45,7 +45,7 @@ spec:
             - -c
             - |
               export PGPASSWORD=$POSTGRES_PASSWORD
-              pg_dump -U $POSTGRES_USER -h postgres.mardan-smart-city.svc.cluster.local -d $POSTGRES_DB \
+              pg_dump -U $POSTGRES_USER -h postgres.demo-namespace.svc.cluster.local -d $POSTGRES_DB \
                 -F c -f /backup/db_backup_$(date +%Y%m%d_%H%M%S).dump
               find /backup -name "*.dump" -mtime +7 -delete
             envFrom:

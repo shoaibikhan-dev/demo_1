@@ -45,7 +45,7 @@ spec:
   - to:
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: mardan-smart-city
+          kubernetes.io/metadata.name: demo-namespace
       podSelector:
         matchLabels:
           app: auth-service
@@ -55,7 +55,7 @@ spec:
   - to:
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: mardan-smart-city
+          kubernetes.io/metadata.name: demo-namespace
       podSelector:
         matchLabels:
           app: complaint-service
@@ -65,7 +65,7 @@ spec:
   - to:
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: mardan-smart-city
+          kubernetes.io/metadata.name: demo-namespace
       podSelector:
         matchLabels:
           app: notification-service

@@ -37,7 +37,7 @@ spec:
           name: postgres
         env:
         - name: DB_HOST
-          value: postgres.mardan-smart-city.svc.cluster.local
+          value: postgres.demo-namespace.svc.cluster.local
         - name: DB_PORT
           value: "5432"
         - name: DB_NAME
