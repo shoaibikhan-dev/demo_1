@@ -31,7 +31,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: notification-service
-        image: shanisha/notification-service:aea5bd325bd5de559160a96432aca88f1ff3c2ad
+        image: shanisha/notification-service:c1b46592fcdc7a0c27434de645083f90c1ee24e9
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
