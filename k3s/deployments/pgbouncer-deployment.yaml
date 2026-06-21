@@ -52,9 +52,9 @@ spec:
         - name: PGBOUNCER_POOL_MODE
           value: transaction
         - name: PGBOUNCER_MAX_CLIENT_CONN
-          value: "5000"
+          value: "10000"
         - name: PGBOUNCER_DEFAULT_POOL_SIZE
-          value: "100"
+          value: "200"
         - name: PGBOUNCER_MIN_POOL_SIZE
           value: "10"
         - name: PGBOUNCER_RESERVE_POOL_SIZE
