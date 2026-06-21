@@ -136,16 +136,29 @@ jobs:
             ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}
 
       - name: Update Image Tags in Kubernetes YAML
+        env:
+          DOCKER_USER: ${{ secrets.DOCKERUSERNAME }}
+          SHA: ${{ github.sha }}
         run: |
-          sed -i "s|${{ secrets.DOCKERUSERNAME }}/auth-service[^\"]*|${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}|g" k3s/deployments/auth-deployment.yaml
-          sed -i "s|${{ secrets.DOCKERUSERNAME }}/complaint-service[^\"]*|${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}|g" k3s/deployments/complaint-deployment.yaml
-          sed -i "s|${{ secrets.DOCKERUSERNAME }}/notification-service[^\"]*|${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}|g" k3s/deployments/notification-deployment.yaml
-          sed -i "s|${{ secrets.DOCKERUSERNAME }}/mardan-frontend[^\"]*|${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}|g" k3s/deployments/frontend-deployment.yaml
+          set -x
+          echo "DOCKER_USER length: ${#DOCKER_USER}"
+          sed -i "s|${DOCKER_USER}/auth-service[^\"]*|${DOCKER_USER}/auth-service:${SHA}|g" k3s/deployments/auth-deployment.yaml
+          sed -i "s|${DOCKER_USER}/complaint-service[^\"]*|${DOCKER_USER}/complaint-service:${SHA}|g" k3s/deployments/complaint-deployment.yaml
+          sed -i "s|${DOCKER_USER}/notification-service[^\"]*|${DOCKER_USER}/notification-service:${SHA}|g" k3s/deployments/notification-deployment.yaml
+          sed -i "s|${DOCKER_USER}/mardan-frontend[^\"]*|${DOCKER_USER}/mardan-frontend:${SHA}|g" k3s/deployments/frontend-deployment.yaml
+
+          git diff k3s/deployments/
+
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
           git add k3s/deployments/auth-deployment.yaml
           git add k3s/deployments/complaint-deployment.yaml
           git add k3s/deployments/notification-deployment.yaml
           git add k3s/deployments/frontend-deployment.yaml
-          git commit -m "ci: update images to ${{ github.sha }}"
-          git push
+
+          if git diff --cached --quiet; then
+            echo "No image tag changes to commit, skipping."
+          else
+            git commit -m "ci: update images to ${SHA}"
+            git push
+          fi
