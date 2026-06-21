@@ -1,0 +1,5 @@
+# Exclude Sealed Secrets which trigger false-positive generic secret warnings
+k3s/secrets/
+
+# Exclude node-exporter daemonset configuration from Host namespace usage warnings
+k3s/observability/node-exporter.yaml

@@ -13,5 +13,11 @@ RUN apk update && apk upgrade --no-cache
 RUN rm -rf /usr/share/nginx/html/*
 COPY --from=build /app/dist /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-EXPOSE 80
+
+# Setup non-root execution permissions for user 101
+RUN touch /var/run/nginx.pid && \
+    chown -R 101:101 /var/run/nginx.pid /var/cache/nginx /var/log/nginx /usr/share/nginx/html
+
+USER 101
+EXPOSE 8080
 CMD ["nginx", "-g", "daemon off;"]
