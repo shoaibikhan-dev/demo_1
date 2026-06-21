@@ -31,7 +31,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: auth-service
-        image: shanisha/auth-service:8b1dc8f83ccb269036cdc4884cd0cb1cdcf331d0
+        image: shanisha/auth-service:efbf9ba3ef8df85fa39a7f690cb0ebcd90e7ae65
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
