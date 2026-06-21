@@ -31,7 +31,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: auth-service
-        image: shoaibikhandev/auth-service:latest
+        image: shanisha/auth-service:latest
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false

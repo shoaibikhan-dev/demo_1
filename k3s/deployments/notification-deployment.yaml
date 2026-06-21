@@ -31,7 +31,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: notification-service
-        image: shoaibikhandev/notification-service:latest
+        image: shanisha/notification-service:latest
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false

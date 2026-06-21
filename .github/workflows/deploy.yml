@@ -23,26 +23,55 @@ jobs:
           username: ${{ secrets.DOCKERUSERNAME }}
           password: ${{ secrets.DOCKERPASSWORD }}
 
-      - name: Build Backend Docker Image
+      - name: Build Auth Service Image
         run: |
-          docker build -t ${{ secrets.DOCKERUSERNAME }}/mardan-backend:${{ github.sha }} \
-            -t ${{ secrets.DOCKERUSERNAME }}/mardan-backend:latest ./backend
+          docker build -t ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }} \
+            -t ${{ secrets.DOCKERUSERNAME }}/auth-service:latest ./services/auth-service
 
-      - name: Build Frontend Docker Image
+      - name: Build Complaint Service Image
+        run: |
+          docker build -t ${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }} \
+            -t ${{ secrets.DOCKERUSERNAME }}/complaint-service:latest ./services/complaint-service
+
+      - name: Build Notification Service Image
+        run: |
+          docker build -t ${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }} \
+            -t ${{ secrets.DOCKERUSERNAME }}/notification-service:latest ./services/notification-service
+
+      - name: Build Frontend Image
         run: |
           docker build -t ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }} \
             -t ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:latest ./frontend
 
-      - name: Trivy Scan Backend
+      - name: Trivy Scan Auth Service
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: ${{ secrets.DOCKERUSERNAME }}/mardan-backend:${{ github.sha }}
+          image-ref: ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}
           format: table
           exit-code: '1'
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           vuln-type: os,library
-          skip-files: /usr/local/lib/node_modules/npm/node_modules
+
+      - name: Trivy Scan Complaint Service
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}
+          format: table
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          vuln-type: os,library
+
+      - name: Trivy Scan Notification Service
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}
+          format: table
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          vuln-type: os,library
 
       - name: Trivy Scan Frontend
         uses: aquasecurity/trivy-action@v0.36.0
@@ -53,25 +82,50 @@ jobs:
           severity: CRITICAL,HIGH
           ignore-unfixed: true
           vuln-type: os,library
-          skip-files: /usr/local/lib/node_modules/npm/node_modules
 
-      - name: Push Backend Image
+      - name: Push Auth Service Image
         run: |
-          docker push ${{ secrets.DOCKERUSERNAME }}/mardan-backend:${{ github.sha }}
-          docker push ${{ secrets.DOCKERUSERNAME }}/mardan-backend:latest
+          docker push ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}
+          docker push ${{ secrets.DOCKERUSERNAME }}/auth-service:latest
+
+      - name: Push Complaint Service Image
+        run: |
+          docker push ${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}
+          docker push ${{ secrets.DOCKERUSERNAME }}/complaint-service:latest
+
+      - name: Push Notification Service Image
+        run: |
+          docker push ${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}
+          docker push ${{ secrets.DOCKERUSERNAME }}/notification-service:latest
 
       - name: Push Frontend Image
         run: |
           docker push ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}
           docker push ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:latest
 
-      - name: Sign Backend Image
+      - name: Sign Auth Service Image
         env:
           COSIGN_PRIVATE_KEY: ${{ secrets.COSIGNPRIVATEKEY }}
           COSIGN_PASSWORD: ${{ secrets.COSIGNPASSWORD }}
         run: |
           cosign sign --key env://COSIGN_PRIVATE_KEY --yes \
-            ${{ secrets.DOCKERUSERNAME }}/mardan-backend:${{ github.sha }}
+            ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}
+
+      - name: Sign Complaint Service Image
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGNPRIVATEKEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGNPASSWORD }}
+        run: |
+          cosign sign --key env://COSIGN_PRIVATE_KEY --yes \
+            ${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}
+
+      - name: Sign Notification Service Image
+        env:
+          COSIGN_PRIVATE_KEY: ${{ secrets.COSIGNPRIVATEKEY }}
+          COSIGN_PASSWORD: ${{ secrets.COSIGNPASSWORD }}
+        run: |
+          cosign sign --key env://COSIGN_PRIVATE_KEY --yes \
+            ${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}
 
       - name: Sign Frontend Image
         env:
@@ -83,11 +137,15 @@ jobs:
 
       - name: Update Image Tags in Kubernetes YAML
         run: |
-          sed -i "s|${{ secrets.DOCKERUSERNAME }}/mardan-backend[^\"]*|${{ secrets.DOCKERUSERNAME }}/mardan-backend:${{ github.sha }}|g" k3s/deployments/backend-deployment.yaml
+          sed -i "s|${{ secrets.DOCKERUSERNAME }}/auth-service[^\"]*|${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}|g" k3s/deployments/auth-deployment.yaml
+          sed -i "s|${{ secrets.DOCKERUSERNAME }}/complaint-service[^\"]*|${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}|g" k3s/deployments/complaint-deployment.yaml
+          sed -i "s|${{ secrets.DOCKERUSERNAME }}/notification-service[^\"]*|${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}|g" k3s/deployments/notification-deployment.yaml
           sed -i "s|${{ secrets.DOCKERUSERNAME }}/mardan-frontend[^\"]*|${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}|g" k3s/deployments/frontend-deployment.yaml
           git config user.email "actions@github.com"
           git config user.name "GitHub Actions"
-          git add k3s/deployments/backend-deployment.yaml
+          git add k3s/deployments/auth-deployment.yaml
+          git add k3s/deployments/complaint-deployment.yaml
+          git add k3s/deployments/notification-deployment.yaml
           git add k3s/deployments/frontend-deployment.yaml
           git commit -m "ci: update images to ${{ github.sha }}"
           git push

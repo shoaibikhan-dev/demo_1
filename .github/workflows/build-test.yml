@@ -12,33 +12,81 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v4
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+
       - name: Install Frontend Dependencies
         working-directory: ./frontend
         run: npm ci
+
       - name: Build Frontend
         working-directory: ./frontend
         run: npm run build
-      - name: Install Backend Dependencies
-        working-directory: ./backend
-        run: npm ci
-      - name: Security Audit Backend
-        working-directory: ./backend
-        run: npm audit --audit-level=high
+
       - name: Lint Frontend
         working-directory: ./frontend
         run: npm run lint
 
-      - name: Build Backend Docker Image
-        run: docker build -t mardan-backend:scan ./backend
+      - name: Install Auth Service Dependencies
+        working-directory: ./services/auth-service
+        run: npm ci
 
-      - name: Run Trivy Vulnerability Scan
+      - name: Security Audit Auth Service
+        working-directory: ./services/auth-service
+        run: npm audit --audit-level=high
+
+      - name: Install Complaint Service Dependencies
+        working-directory: ./services/complaint-service
+        run: npm ci
+
+      - name: Security Audit Complaint Service
+        working-directory: ./services/complaint-service
+        run: npm audit --audit-level=high
+
+      - name: Install Notification Service Dependencies
+        working-directory: ./services/notification-service
+        run: npm ci
+
+      - name: Security Audit Notification Service
+        working-directory: ./services/notification-service
+        run: npm audit --audit-level=high
+
+      - name: Build Auth Service Docker Image
+        run: docker build -t auth-service:scan ./services/auth-service
+
+      - name: Build Complaint Service Docker Image
+        run: docker build -t complaint-service:scan ./services/complaint-service
+
+      - name: Build Notification Service Docker Image
+        run: docker build -t notification-service:scan ./services/notification-service
+
+      - name: Trivy Scan Auth Service
         uses: aquasecurity/trivy-action@v0.36.0
         with:
-          image-ref: mardan-backend:scan
+          image-ref: auth-service:scan
+          format: table
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          trivyignores: ".trivyignore"
+
+      - name: Trivy Scan Complaint Service
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: complaint-service:scan
+          format: table
+          exit-code: '1'
+          severity: CRITICAL,HIGH
+          ignore-unfixed: true
+          trivyignores: ".trivyignore"
+
+      - name: Trivy Scan Notification Service
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: notification-service:scan
           format: table
           exit-code: '1'
           severity: CRITICAL,HIGH
