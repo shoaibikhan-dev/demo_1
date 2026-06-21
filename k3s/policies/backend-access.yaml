@@ -1,12 +1,99 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: backend-ingress
+  name: auth-service-policy
   namespace: mardan-smart-city
 spec:
   podSelector:
     matchLabels:
-      app: backend
+      app: auth-service
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: traefik
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: pgbouncer
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - protocol: TCP
+      port: 6379
+  - ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: complaint-service-policy
+  namespace: mardan-smart-city
+spec:
+  podSelector:
+    matchLabels:
+      app: complaint-service
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: traefik
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: pgbouncer
+    ports:
+    - protocol: TCP
+      port: 5432
+  - to:
+    - podSelector:
+        matchLabels:
+          app: redis
+    ports:
+    - protocol: TCP
+      port: 6379
+  - ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+  - ports:
+    - port: 587
+      protocol: TCP
+    - port: 465
+      protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: notification-service-policy
+  namespace: mardan-smart-city
+spec:
+  podSelector:
+    matchLabels:
+      app: notification-service
   policyTypes:
   - Ingress
   - Egress
@@ -68,10 +155,24 @@ spec:
   - to:
     - podSelector:
         matchLabels:
-          app: backend
+          app: auth-service
     ports:
     - protocol: TCP
-      port: 5000
+      port: 5001
+  - to:
+    - podSelector:
+        matchLabels:
+          app: complaint-service
+    ports:
+    - protocol: TCP
+      port: 5002
+  - to:
+    - podSelector:
+        matchLabels:
+          app: notification-service
+    ports:
+    - protocol: TCP
+      port: 5003
   - ports:
     - port: 53
       protocol: UDP

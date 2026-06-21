@@ -3,6 +3,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - config/backend-config.yaml
+  - config/postgres-init-configmap.yaml
   - secrets/backend-sealed-secret.yaml
   - secrets/postgres-sealed-secret.yaml
   - secrets/grafana-sealed-secret.yaml
@@ -13,28 +14,34 @@ resources:
   - security/service-accounts.yaml
   - security/roles.yaml
   - security/role-bindings.yaml
-  - observability/grafana-deployment.yaml
+  - security/gatekeeper-constraints.yaml
   - policies/default-deny.yaml
-  - reliability/backend-pdb.yaml
-  - reliability/frontend-pdb.yaml
-  - reliability/postgres-backup-cronjob.yaml
-  - deployments/pgbouncer-deployment.yaml
-  - deployments/postgres-deployment.yaml
-  - deployments/redis-deployment.yaml
-  - deployments/backend-deployment.yaml
-  - deployments/frontend-deployment.yaml
-  - services/postgres-service.yaml
-  - services/redis-service.yaml
-  - services/backend-service.yaml
-  - services/frontend-service.yaml
-  - ingress/main-ingress.yaml
-  - autoscaling/backend-hpa.yaml
-  - autoscaling/frontend-hpa.yaml
-  - config/postgres-init-configmap.yaml
   - policies/backend-access.yaml
   - policies/db-access.yaml
   - policies/monitoring-access.yaml
+  - deployments/postgres-deployment.yaml
+  - deployments/pgbouncer-deployment.yaml
+  - deployments/redis-deployment.yaml
+  - deployments/auth-deployment.yaml
+  - deployments/complaint-deployment.yaml
+  - deployments/notification-deployment.yaml
+  - deployments/frontend-deployment.yaml
+  - services/postgres-service.yaml
+  - services/redis-service.yaml
+  - services/auth-service.yaml
+  - services/complaint-service.yaml
+  - services/notification-service.yaml
+  - services/frontend-service.yaml
+  - services/pgbouncer-service.yaml
+  - ingress/main-ingress.yaml
+  - autoscaling/backend-hpa.yaml
+  - autoscaling/frontend-hpa.yaml
+  - reliability/backend-pdb.yaml
+  - reliability/frontend-pdb.yaml
+  - reliability/postgres-backup-cronjob.yaml
+  - observability/grafana-deployment.yaml
   - observability/prometheus-deployment.yaml
   - observability/node-exporter.yaml
   - observability/node-exporter-namespace.yaml
-  - security/gatekeeper-constraints.yaml
+  - gitops/argocd-app.yaml
+  - gitops/argocd-project.yaml

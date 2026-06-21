@@ -6,7 +6,7 @@ metadata:
 spec:
   project: mardan-project
   source:
-    repoURL: 'https://github.com/shoaibikhan-dev/mardan-smart.git'
+    repoURL: 'https://github.com/shoaibikhan-dev/demo_1.git'
     targetRevision: HEAD
     path: k3s
   destination:

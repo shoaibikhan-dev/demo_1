@@ -1,10 +1,32 @@
 apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
-  name: backend-pdb
+  name: auth-pdb
   namespace: mardan-smart-city
 spec:
   minAvailable: "50%"
   selector:
     matchLabels:
-      app: backend
+      app: auth-service
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: complaint-pdb
+  namespace: mardan-smart-city
+spec:
+  minAvailable: "50%"
+  selector:
+    matchLabels:
+      app: complaint-service
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: notification-pdb
+  namespace: mardan-smart-city
+spec:
+  minAvailable: 1
+  selector:
+    matchLabels:
+      app: notification-service
