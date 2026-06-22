@@ -75,7 +75,7 @@ exports.register = async (req, res) => {
         message: 'CNIC already registered',
       });
 
-    const hashed = await bcrypt.hash(password, 12);
+    const hashed = await bcrypt.hash(password, 10);
 
     const user = await User.create({
       name,
