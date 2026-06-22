@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: '1mb' }));
 
 const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, max: 10,
+  windowMs: 15 * 60 * 1000, max: 100000,
   store: new RedisStore({ sendCommand: (...args) => redisClient.call(...args), prefix: 'rl:login:' }),
 });
 
