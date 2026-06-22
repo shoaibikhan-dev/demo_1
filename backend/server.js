@@ -1,3 +1,15 @@
+const cluster = require('cluster');
+const os = require('os');
+
+if (cluster.isMaster) {
+  const numCPUs = Math.min(os.cpus().length, 4);
+  console.log(`Master ${process.pid} running, forking ${numCPUs} workers`);
+  for (let i = 0; i < numCPUs; i++) cluster.fork();
+  cluster.on('exit', (worker) => {
+    console.log(`Worker ${worker.process.pid} died, restarting...`);
+    cluster.fork();
+  });
+} else {
 const express    = require('express');
 const cookieParser = require('cookie-parser');
 const helmet     = require('helmet');
@@ -76,7 +88,7 @@ const sharedRedisConfig = {
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 10,
+  max: 1000,
   message: { success: false, message: 'Too many login attempts. Please try again in 15 minutes.' },
   standardHeaders: true,
   legacyHeaders: false,
@@ -178,3 +190,5 @@ const startServer = async () => {
 startServer();
 
 module.exports = app;
+
+}

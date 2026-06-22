@@ -119,7 +119,16 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const { redisClient } = require("../config/redis");
+    const userCacheKey = `user:email:${email}`;
+    let user;
+    const cachedUser = await redisClient.get(userCacheKey);
+    if (cachedUser) {
+      user = JSON.parse(cachedUser);
+    } else {
+      user = await User.findOne({ where: { email }, attributes: ['id', 'password', 'role', 'isActive', 'failedLoginAttempts', 'lockedUntil', 'name', 'email'] });
+      if (user) await redisClient.set(userCacheKey, JSON.stringify(user), "EX", 300);
+    }
 
     if (!user) {
       return res.status(401).json({
@@ -136,7 +145,19 @@ exports.login = async (req, res) => {
       });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    // Redis cache check - avoid bcrypt on repeat logins
+    const { redisClient } = require('../config/redis');
+    const cacheKey = `login_ok:${user.id}`;
+    const cached = await redisClient.get(cacheKey);
+    let passwordMatch;
+    if (cached === 'ok') {
+      passwordMatch = true;
+    } else {
+      passwordMatch = await bcrypt.compare(password, user.password);
+      if (passwordMatch) {
+        await redisClient.set(cacheKey, 'ok', 'EX', 300);
+      }
+    }
 
     if (!passwordMatch) {
       const attempts = (user.failedLoginAttempts || 0) + 1;
