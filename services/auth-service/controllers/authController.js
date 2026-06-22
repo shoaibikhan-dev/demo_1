@@ -119,7 +119,16 @@ exports.login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const user = await User.findOne({ where: { email } });
+    const { redisClient } = require('../config/redis');
+    const userCacheKey = `user:email:${email}`;
+    let user;
+    const cachedUser = await redisClient.get(userCacheKey);
+    if (cachedUser) {
+      user = JSON.parse(cachedUser);
+    } else {
+      user = await User.findOne({ where: { email }, attributes: ['id','password','role','isActive','failedLoginAttempts','lockedUntil','name','email','cnic'] });
+      if (user) await redisClient.set(userCacheKey, JSON.stringify(user), 'EX', 60);
+    }
 
     if (!user) {
       return res.status(401).json({
@@ -138,14 +147,24 @@ exports.login = async (req, res) => {
 
     const passwordMatch = await bcrypt.compare(password, user.password);
 
+    // Any write path needs a real Sequelize instance, not the cached plain object
+    let userRow = user;
+    if (cachedUser) {
+      userRow = await User.findOne({ where: { email } });
+      if (!userRow) {
+        return res.status(401).json({ success: false, message: 'Invalid credentials' });
+      }
+    }
+
     if (!passwordMatch) {
-      const attempts = (user.failedLoginAttempts || 0) + 1;
+      const attempts = (userRow.failedLoginAttempts || 0) + 1;
 
       if (attempts >= 5) {
-        await user.update({
+        await userRow.update({
           failedLoginAttempts: 0,
           lockedUntil: new Date(Date.now() + 15 * 60 * 1000),
         });
+        await redisClient.del(userCacheKey);
 
         return res.status(423).json({
           success: false,
@@ -154,9 +173,10 @@ exports.login = async (req, res) => {
         });
       }
 
-      await user.update({
+      await userRow.update({
         failedLoginAttempts: attempts,
       });
+      await redisClient.del(userCacheKey);
 
       return res.status(401).json({
         success: false,
@@ -164,10 +184,12 @@ exports.login = async (req, res) => {
       });
     }
 
-    await user.update({
+    await userRow.update({
       failedLoginAttempts: 0,
       lockedUntil: null,
     });
+    await redisClient.del(userCacheKey);
+    user = userRow;
 
     await setTokenCookies(res, user.id);
 
