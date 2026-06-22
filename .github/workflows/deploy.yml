@@ -159,6 +159,6 @@ jobs:
           if git diff --cached --quiet; then
             echo "No image tag changes to commit, skipping."
           else
-            git commit -m "ci: update images to ${SHA}"
+            git commit -m "ci: update images to ${SHA} [skip ci]"
             git push
           fi
