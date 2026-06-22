@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pgbouncer-userlist
+  namespace: demo-namespace
+data:
+  userlist.txt: |
+    "postgres" "mardan_password_123"

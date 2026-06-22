@@ -21,6 +21,7 @@ resources:
   - policies/db-access.yaml
   - policies/monitoring-access.yaml
   - deployments/postgres-deployment.yaml
+  - deployments/pgbouncer-userlist-configmap.yaml
   - deployments/pgbouncer-deployment.yaml
   - deployments/redis-deployment.yaml
   - deployments/auth-deployment.yaml

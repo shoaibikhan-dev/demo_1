@@ -49,6 +49,8 @@ spec:
             secretKeyRef:
               name: postgres-secrets
               key: POSTGRES_PASSWORD
+        - name: AUTH_FILE
+          value: /etc/pgbouncer/userlist.txt
         - name: PGBOUNCER_POOL_MODE
           value: transaction
         - name: PGBOUNCER_MAX_CLIENT_CONN
@@ -89,8 +91,14 @@ spec:
           mountPath: /tmp
         - name: run-volume
           mountPath: /var/run
+        - name: userlist-volume
+          mountPath: /etc/pgbouncer/userlist.txt
+          subPath: userlist.txt
       volumes:
       - name: tmp-volume
         emptyDir: {}
       - name: run-volume
         emptyDir: {}
+      - name: userlist-volume
+        configMap:
+          name: pgbouncer-userlist
