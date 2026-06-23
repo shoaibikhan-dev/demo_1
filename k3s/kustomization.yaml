@@ -48,3 +48,4 @@ resources:
   - observability/node-exporter-namespace.yaml
   - gitops/argocd-app.yaml
   - gitops/argocd-project.yaml
+  - autoscaling/complaint-keda-scaler.yaml

@@ -1,0 +1,16 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: complaint-service-scaler
+  namespace: demo-namespace
+spec:
+  scaleTargetRef:
+    name: complaint-service
+  minReplicaCount: 2
+  maxReplicaCount: 10
+  triggers:
+  - type: redis
+    metadata:
+      address: redis.demo-namespace.svc.cluster.local:6379
+      listName: bull:notifications:wait
+      listLength: "5"
