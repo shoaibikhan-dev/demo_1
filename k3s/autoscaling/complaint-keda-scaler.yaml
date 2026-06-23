@@ -1,4 +1,15 @@
 apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-redis-auth
+  namespace: demo-namespace
+spec:
+  secretTargetRef:
+  - parameter: password
+    name: keda-redis-secret
+    key: redis_password
+---
+apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: complaint-service-scaler
@@ -10,6 +21,8 @@ spec:
   maxReplicaCount: 10
   triggers:
   - type: redis
+    authenticationRef:
+      name: keda-redis-auth
     metadata:
       address: redis.demo-namespace.svc.cluster.local:6379
       listName: bull:notifications:wait
