@@ -31,7 +31,6 @@ exports.createComplaint = async (req, res) => {
   if (!title || !description || !category)
     return res.status(400).json({ success: false, message: 'Title, description and category are required.' });
   try {
-    const imageUrl = buildImageUrl(req, req.file);
     let complaint;
     let attempts = 0;
     while (attempts < 5) {
@@ -41,7 +40,8 @@ exports.createComplaint = async (req, res) => {
           title: title.trim(), description: description.trim(),
           category, priority: priority || 'medium',
           location: location?.trim() || null,
-          imageUrl, trackingId, userId: req.user.id,
+          imageUrl: null,
+          trackingId, userId: req.user.id,
         });
         break;
       } catch (err) {
@@ -53,12 +53,25 @@ exports.createComplaint = async (req, res) => {
         }
       }
     }
-    await invalidateComplaintCache();
+    // Turant response do
     res.status(201).json({ success: true, data: complaint });
+    // Background mein file process karo
+    setImmediate(async () => {
+      try {
+        if (req.file) {
+          const imageUrl = buildImageUrl(req, req.file);
+          await complaint.update({ imageUrl });
+        }
+        await invalidateComplaintCache();
+      } catch (err) {
+        logger.error({ err }, 'Background processing error');
+      }
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
 
 exports.getAllComplaints = async (req, res) => {
   try {
