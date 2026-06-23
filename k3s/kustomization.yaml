@@ -49,3 +49,4 @@ resources:
   - gitops/argocd-app.yaml
   - gitops/argocd-project.yaml
   - autoscaling/complaint-keda-scaler.yaml
+  - autoscaling/keda-redis-secret.yaml
