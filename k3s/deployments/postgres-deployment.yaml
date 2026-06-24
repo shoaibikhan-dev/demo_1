@@ -11,6 +11,8 @@ spec:
       app: postgres
   template:
     metadata:
+      annotations:
+        linkerd.io/inject: disabled
       labels:
         app: postgres
     spec:
@@ -70,14 +72,14 @@ spec:
         - mountPath: /var/run/postgresql
           name: run-volume
         - mountPath: /var/lib/postgresql/data
-          name: postgres-storage
+          name: postgres-data
   volumeClaimTemplates:
   - metadata:
-      name: postgres-storage
+      name: postgres-data
     spec:
       accessModes:
       - ReadWriteOnce
       resources:
         requests:
-          storage: 1Gi
+          storage: 10Gi
 
