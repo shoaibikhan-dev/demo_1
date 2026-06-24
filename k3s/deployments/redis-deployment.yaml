@@ -52,6 +52,10 @@ spec:
         - "allkeys-lru"
         - "--appendonly"
         - "yes"
+        - "--stop-writes-on-bgsave-error"
+        - "no"
+        - "--save"
+        - ""
         env:
         - name: REDIS_PASSWORD
           valueFrom:
