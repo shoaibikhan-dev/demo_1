@@ -16,6 +16,7 @@ resources:
   - security/role-bindings.yaml
   - security/gatekeeper-constraints.yaml
   - policies/default-deny.yaml
+  - policies/linkerd-access.yaml
   - policies/backend-access.yaml
   - policies/redis-access.yaml
   - policies/db-access.yaml
