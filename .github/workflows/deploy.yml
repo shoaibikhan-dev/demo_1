@@ -14,6 +14,19 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Install Conftest
+        run: |
+          curl -sfL https://github.com/open-policy-agent/conftest/releases/download/v0.68.2/conftest_0.68.2_Linux_x86_64.tar.gz -o conftest.tar.gz
+          tar xzf conftest.tar.gz
+          sudo mv conftest /usr/local/bin/
+
+      - name: Validate Manifests with Conftest
+        run: |
+          conftest test k3s/deployments/auth-deployment.yaml -p policy/
+          conftest test k3s/deployments/complaint-deployment.yaml -p policy/
+          conftest test k3s/deployments/notification-deployment.yaml -p policy/
+          conftest test k3s/deployments/frontend-deployment.yaml -p policy/
+
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3
 
