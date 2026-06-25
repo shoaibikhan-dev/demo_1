@@ -22,7 +22,7 @@ spec:
         app: complaint-service
         tier: backend
     spec:
-      serviceAccountName: backend-sa
+      serviceAccountName: complaint-sa
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true

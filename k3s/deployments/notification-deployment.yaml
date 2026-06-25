@@ -22,7 +22,7 @@ spec:
         app: notification-service
         tier: backend
     spec:
-      serviceAccountName: backend-sa
+      serviceAccountName: notification-sa
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true

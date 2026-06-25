@@ -18,11 +18,13 @@ spec:
       maxUnavailable: 0
   template:
     metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/auth-service: localhost/mardan-app
       labels:
         app: auth-service
         tier: backend
     spec:
-      serviceAccountName: backend-sa
+      serviceAccountName: auth-sa
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true

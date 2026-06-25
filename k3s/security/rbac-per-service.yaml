@@ -1,0 +1,92 @@
+# Auth Service
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: auth-sa
+  namespace: demo-namespace
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: auth-role
+  namespace: demo-namespace
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  resourceNames: ["backend-config"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: auth-rolebinding
+  namespace: demo-namespace
+subjects:
+- kind: ServiceAccount
+  name: auth-sa
+roleRef:
+  kind: Role
+  name: auth-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Complaint Service
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: complaint-sa
+  namespace: demo-namespace
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: complaint-role
+  namespace: demo-namespace
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  resourceNames: ["backend-config"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: complaint-rolebinding
+  namespace: demo-namespace
+subjects:
+- kind: ServiceAccount
+  name: complaint-sa
+roleRef:
+  kind: Role
+  name: complaint-role
+  apiGroup: rbac.authorization.k8s.io
+---
+# Notification Service
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: notification-sa
+  namespace: demo-namespace
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: notification-role
+  namespace: demo-namespace
+rules:
+- apiGroups: [""]
+  resources: ["configmaps"]
+  resourceNames: ["backend-config"]
+  verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: notification-rolebinding
+  namespace: demo-namespace
+subjects:
+- kind: ServiceAccount
+  name: notification-sa
+roleRef:
+  kind: Role
+  name: notification-role
+  apiGroup: rbac.authorization.k8s.io
