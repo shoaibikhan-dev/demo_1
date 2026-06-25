@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluent-bit
+  namespace: demo-namespace
+spec:
+  selector:
+    matchLabels:
+      app: fluent-bit
+  template:
+    metadata:
+      labels:
+        app: fluent-bit
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+      - name: fluent-bit
+        image: docker.io/fluent/fluent-bit:3.0
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: [ALL]
+        resources:
+          requests:
+            cpu: "10m"
+            memory: "32Mi"
+          limits:
+            cpu: "50m"
+            memory: "64Mi"
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+          readOnly: true
+        - name: fluent-bit-config
+          mountPath: /fluent-bit/etc
+        - name: tmp-volume
+          mountPath: /tmp
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: fluent-bit-config
+        configMap:
+          name: fluent-bit-config
+      - name: tmp-volume
+        emptyDir: {}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluent-bit-config
+  namespace: demo-namespace
+data:
+  fluent-bit.conf: |
+    [SERVICE]
+        Flush        5
+        Daemon       Off
+        Log_Level    info
+
+    [INPUT]
+        Name             tail
+        Path             /var/log/containers/*demo-namespace*.log
+        Parser           docker
+        Tag              kube.*
+        Refresh_Interval 5
+
+    [OUTPUT]
+        Name   loki
+        Match  *
+        Host   loki
+        Port   3100
+        Labels job=fluent-bit
