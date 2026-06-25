@@ -33,7 +33,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: frontend
-        image: shanisha/mardan-frontend:93197ea56fa6a8b5f3aa943fb4af3b06f5bc4ec3
+        image: shanisha/mardan-frontend:abf90be2d2a99a4d70ea92f5de95644109e9e15f
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
