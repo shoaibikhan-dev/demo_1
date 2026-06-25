@@ -11,8 +11,6 @@ spec:
       app: postgres
   template:
     metadata:
-      annotations:
-        linkerd.io/inject: disabled
       labels:
         app: postgres
     spec:
