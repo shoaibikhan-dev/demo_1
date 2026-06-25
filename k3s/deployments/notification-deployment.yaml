@@ -34,7 +34,7 @@ spec:
           localhostProfile: profiles/mardan-app.json
       containers:
       - name: notification-service
-        image: shanisha/notification-service:661e43330f01fead7e0c5a8bb987d3485bb77e2e
+        image: shanisha/notification-service:93197ea56fa6a8b5f3aa943fb4af3b06f5bc4ec3
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
