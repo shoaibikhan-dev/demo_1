@@ -23,3 +23,4 @@ spec:
       - "docker.io/pgbouncer/"
       - "docker.io/bitnami/"
       - "ealen/"
+      - "docker.io/library/"
