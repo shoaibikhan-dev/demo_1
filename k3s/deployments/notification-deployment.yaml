@@ -24,7 +24,6 @@ spec:
         app: notification-service
         tier: backend
     spec:
-      runtimeClassName: gvisor
       serviceAccountName: notification-sa
       automountServiceAccountToken: false
       securityContext:

@@ -24,7 +24,6 @@ spec:
         app: complaint-service
         tier: backend
     spec:
-      runtimeClassName: gvisor
       serviceAccountName: complaint-sa
       automountServiceAccountToken: false
       securityContext:
