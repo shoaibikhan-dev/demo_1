@@ -41,7 +41,7 @@ spec:
           type: RuntimeDefault
       containers:
       - name: prometheus
-        image: prom/prometheus:v2.53.0
+        image: docker.io/prom/prometheus:v2.53.0
         securityContext:
           allowPrivilegeEscalation: false
           readOnlyRootFilesystem: true
