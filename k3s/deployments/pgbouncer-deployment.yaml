@@ -52,7 +52,7 @@ spec:
         - name: AUTH_FILE
           value: /etc/pgbouncer/userlist.txt
         - name: PGBOUNCER_POOL_MODE
-          value: transaction
+          value: session
         - name: PGBOUNCER_MAX_CLIENT_CONN
           value: "10000"
         - name: PGBOUNCER_DEFAULT_POOL_SIZE
