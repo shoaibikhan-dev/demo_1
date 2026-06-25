@@ -58,7 +58,6 @@ resources:
   - gitops/argocd-project.yaml
   - autoscaling/complaint-keda-scaler.yaml
   - autoscaling/keda-redis-secret.yaml
-  - middleware/middleware-ratelimit.yaml
   - security/allowed-registry.yaml
   - security/allowed-registry-constraint.yaml
   - security/rbac-per-service.yaml
