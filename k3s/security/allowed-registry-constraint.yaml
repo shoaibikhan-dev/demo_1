@@ -1,0 +1,25 @@
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: K8sAllowedRepos
+metadata:
+  name: allowed-repos
+spec:
+  match:
+    kinds:
+      - apiGroups: [""]
+        kinds: ["Pod"]
+    namespaces:
+      - demo-namespace
+  parameters:
+    repos:
+      - "shanisha/"
+      - "docker.io/shanisha/"
+      - "cr.l5d.io/"
+      - "quay.io/"
+      - "registry.k8s.io/"
+      - "ghcr.io/"
+      - "docker.io/prom/"
+      - "docker.io/grafana/"
+      - "docker.io/redis/"
+      - "docker.io/pgbouncer/"
+      - "docker.io/bitnami/"
+      - "ealen/"

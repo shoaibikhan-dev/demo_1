@@ -15,7 +15,9 @@ CREATE TABLE IF NOT EXISTS users (
     role        VARCHAR(10) NOT NULL DEFAULT 'citizen' CHECK (role IN ('citizen', 'admin', 'staff')),
     "isActive"  BOOLEAN NOT NULL DEFAULT TRUE,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "failedLoginAttempts" INTEGER DEFAULT 0,
+    "lockedUntil" TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS departments (
@@ -27,7 +29,9 @@ CREATE TABLE IF NOT EXISTS departments (
     phone       VARCHAR(20),
     "isActive"  BOOLEAN NOT NULL DEFAULT TRUE,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "failedLoginAttempts" INTEGER DEFAULT 0,
+    "lockedUntil" TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS complaints (
@@ -56,7 +60,9 @@ CREATE TABLE IF NOT EXISTS notifications (
     "isRead"    BOOLEAN NOT NULL DEFAULT FALSE,
     "userId"    UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
-    "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    "updatedAt" TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
+    "failedLoginAttempts" INTEGER DEFAULT 0,
+    "lockedUntil" TIMESTAMP
 );
 
 CREATE INDEX idx_complaints_user      ON complaints("userId");
