@@ -83,6 +83,41 @@ jobs:
           ignore-unfixed: true
           vuln-type: os,library
 
+
+      - name: Generate SBOM Auth Service
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}
+          format: cyclonedx
+          output: sbom-auth.json
+
+      - name: Generate SBOM Complaint Service
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ secrets.DOCKERUSERNAME }}/complaint-service:${{ github.sha }}
+          format: cyclonedx
+          output: sbom-complaint.json
+
+      - name: Generate SBOM Notification Service
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ secrets.DOCKERUSERNAME }}/notification-service:${{ github.sha }}
+          format: cyclonedx
+          output: sbom-notification.json
+
+      - name: Generate SBOM Frontend
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          image-ref: ${{ secrets.DOCKERUSERNAME }}/mardan-frontend:${{ github.sha }}
+          format: cyclonedx
+          output: sbom-frontend.json
+
+      - name: Upload SBOMs as Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom-${{ github.sha }}
+          path: sbom-*.json
+
       - name: Push Auth Service Image
         run: |
           docker push ${{ secrets.DOCKERUSERNAME }}/auth-service:${{ github.sha }}

@@ -18,17 +18,21 @@ spec:
       maxUnavailable: 0
   template:
     metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/complaint-service: localhost/mardan-app
       labels:
         app: complaint-service
         tier: backend
     spec:
+      runtimeClassName: gvisor
       serviceAccountName: complaint-sa
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
         seccompProfile:
-          type: RuntimeDefault
+          type: Localhost
+          localhostProfile: profiles/mardan-app.json
       containers:
       - name: complaint-service
         image: shanisha/complaint-service:ff2d76462766d7f4ee810eebf116884caeb5081b

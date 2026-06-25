@@ -18,17 +18,21 @@ spec:
       maxUnavailable: 0
   template:
     metadata:
+      annotations:
+        container.apparmor.security.beta.kubernetes.io/notification-service: localhost/mardan-app
       labels:
         app: notification-service
         tier: backend
     spec:
+      runtimeClassName: gvisor
       serviceAccountName: notification-sa
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
         seccompProfile:
-          type: RuntimeDefault
+          type: Localhost
+          localhostProfile: profiles/mardan-app.json
       containers:
       - name: notification-service
         image: shanisha/notification-service:ff2d76462766d7f4ee810eebf116884caeb5081b
