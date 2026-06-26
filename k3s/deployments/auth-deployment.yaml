@@ -34,7 +34,7 @@ spec:
           localhostProfile: profiles/mardan-app.json
       containers:
       - name: auth-service
-        image: shanisha/auth-service:dddca0c692a25be9433e09bb3b1c2c674bf9f43d
+        image: shanisha/auth-service:03c572438115d64292bf12692f0869523cadde1f
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
