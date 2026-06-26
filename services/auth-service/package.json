@@ -40,7 +40,7 @@
     "rate-limit-redis": "^5.0.0",
     "sequelize": "^6.37.8",
     "sequelize-cli": "^6.6.5",
-    "tar": "^7.5.16"
+    "tar": "^7.5.17"
   },
   "devDependencies": {
     "jest": "^30.4.2",
