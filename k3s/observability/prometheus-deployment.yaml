@@ -28,7 +28,10 @@ data:
         metrics_path: '/api/metrics'
       - job_name: 'node-exporter'
         static_configs:
-          - targets: ['node-exporter.monitoring.svc.cluster.local:9100']
+          - targets: ['node-exporter.mardan-smart-city.svc.cluster.local:9100']
+      - job_name: 'node-exporter2'
+        static_configs:
+          - targets: ['node-exporter.mardan-smart-city.svc.cluster.local:9100']
         metrics_path: '/metrics'
 ---
 apiVersion: apps/v1
