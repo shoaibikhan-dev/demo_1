@@ -21,6 +21,7 @@ spec:
       - "docker.io/grafana/"
       - "docker.io/redis/"
       - "docker.io/pgbouncer/"
-      - "docker.io/bitnami/"
+      - "docker.io/bitnami/", "docker.io/fluent/"
       - "ealen/"
+      - "docker.io/edoburu/"
       - "docker.io/library/"
