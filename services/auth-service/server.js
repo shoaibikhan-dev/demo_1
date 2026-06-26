@@ -47,7 +47,7 @@ const registerLimiter = rateLimit({
   store: new RedisStore({ sendCommand: (...args) => redisClient.call(...args), prefix: 'rl:register:' }),
 });
 
-app.post('/api/v1/auth/login',    loginLimiter);
+// app.post('/api/v1/auth/login',    loginLimiter); // TEMP: disabled for load testing
 app.post('/api/v1/auth/register', registerLimiter);
 
 app.use('/api/v1/auth',  require('./routes/authRoutes'));
