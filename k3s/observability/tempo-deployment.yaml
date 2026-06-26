@@ -37,8 +37,6 @@ spec:
           name: otlp-http
         args:
         - "-config.file=/etc/tempo/tempo.yaml"
-        - "-server.http-listen-address=0.0.0.0"
-        - "-server.grpc-listen-address=0.0.0.0"
         resources:
           requests:
             cpu: "50m"
