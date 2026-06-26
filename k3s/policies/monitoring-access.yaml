@@ -17,6 +17,12 @@ spec:
       podSelector:
         matchLabels:
           app: prometheus
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: demo-namespace
+      podSelector:
+        matchLabels:
+          app: prometheus
     ports:
     - protocol: TCP
       port: 9100
@@ -152,6 +158,52 @@ spec:
     ports:
     - port: 3200
       protocol: TCP
+  - ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: prometheus-egress-demo
+  namespace: demo-namespace
+spec:
+  podSelector:
+    matchLabels:
+      app: prometheus
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app: auth-service
+    ports:
+    - protocol: TCP
+      port: 5001
+  - to:
+    - podSelector:
+        matchLabels:
+          app: complaint-service
+    ports:
+    - protocol: TCP
+      port: 5002
+  - to:
+    - podSelector:
+        matchLabels:
+          app: notification-service
+    ports:
+    - protocol: TCP
+      port: 5003
+  - to:
+    - ipBlock:
+        cidr: 192.168.100.249/32
+    ports:
+    - protocol: TCP
+      port: 9100
   - ports:
     - port: 53
       protocol: UDP
