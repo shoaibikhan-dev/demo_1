@@ -70,11 +70,11 @@ spec:
   - group: 'templates.gatekeeper.sh'
     kind: '*'
   - group: 'config.gatekeeper.sh'
+    kind: '*'
   - group: 'rbac.authorization.k8s.io'
     kind: 'ClusterRole'
   - group: 'rbac.authorization.k8s.io'
     kind: 'ClusterRoleBinding'
-    kind: '*'
   roles:
   - name: read-only
     description: Read only access
