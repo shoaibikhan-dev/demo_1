@@ -48,6 +48,7 @@ resources:
   - observability/loki-config.yaml
   - observability/loki-deployment.yaml
   - observability/fluent-bit.yaml
+  - observability/alertmanager.yaml
   - observability/tempo-config.yaml
   - observability/tempo-deployment.yaml
   - observability/grafana-deployment.yaml
