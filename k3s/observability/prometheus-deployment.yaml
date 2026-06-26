@@ -14,9 +14,17 @@ data:
           - alertmanager:9093
 
     scrape_configs:
-      - job_name: 'backend'
+      - job_name: 'auth-service'
         static_configs:
-          - targets: ['mardan-backend:5000']
+          - targets: ['auth-service:5001']
+        metrics_path: '/api/metrics'
+      - job_name: 'complaint-service'
+        static_configs:
+          - targets: ['complaint-service:5002']
+        metrics_path: '/api/metrics'
+      - job_name: 'notification-service'
+        static_configs:
+          - targets: ['notification-service:5003']
         metrics_path: '/api/metrics'
       - job_name: 'node-exporter'
         static_configs:
