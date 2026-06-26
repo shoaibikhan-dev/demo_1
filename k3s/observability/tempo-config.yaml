@@ -7,7 +7,7 @@ data:
   tempo.yaml: |
     server:
       http_listen_port: 3200
-      http_listen_interface: 0.0.0.0
+      http_listen_address: 0.0.0.0
     ingester:
       trace_idle_period: 10s
       max_block_duration: 5m
