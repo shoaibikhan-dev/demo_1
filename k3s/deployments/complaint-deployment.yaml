@@ -34,7 +34,7 @@ spec:
           localhostProfile: profiles/mardan-app.json
       containers:
       - name: complaint-service
-        image: shanisha/complaint-service:78df2a531493e065616023e572d89e1af945640d
+        image: shanisha/complaint-service:dddca0c692a25be9433e09bb3b1c2c674bf9f43d
         imagePullPolicy: Always
         securityContext:
           allowPrivilegeEscalation: false
