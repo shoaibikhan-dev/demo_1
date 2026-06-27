@@ -28,6 +28,7 @@ spec:
             - SYS_TIME
         args:
           - '--path.rootfs=/host'
+          - '--web.listen-address=0.0.0.0:9100'
         ports:
         - containerPort: 9100
           hostPort: 9100
